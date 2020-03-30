@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000080</color>
+    <color name="colorPrimaryDark">#000080</color>
+    <color name="colorAccent">#ff4081</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="st">#d6d6e3</color>
+    <color name="gray">#708090</color>
+    <color name="grayColor">#c2c2c2</color>
+    <color name="buttoncolor">#00ace6</color>
+    <color name="orange">#ffa31a</color>
+    <color name="trans">#00000000</color>
+    <color name="green">#71f442</color>
+    <color name="actionbarcolor">#01529c</color>
+    <color name="red">#FF0000</color>
+
+    <color name="mygreen">#008000</color>
+    <color name="greymessage">#808080</color>
+</resources>

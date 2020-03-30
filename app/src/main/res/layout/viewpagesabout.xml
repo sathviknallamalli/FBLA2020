@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.example.sathv.ohsfbla.oly.example.sathv.ohsfbla.FBLAHome">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/aboutemail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/textView41"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="11dp"
+                android:text="Contact Email: "
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:srcCompat="@drawable/board" />
+
+            <TextView
+                android:id="@+id/aboutgradyear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/textView41"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="11dp"
+                android:text="Graduation Year: "
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:srcCompat="@drawable/board" />
+
+            <TextView
+                android:id="@+id/aboutusername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/textView41"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="11dp"
+                android:text="Username"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:srcCompat="@drawable/board" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

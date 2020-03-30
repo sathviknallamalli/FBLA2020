@@ -1,0 +1,2 @@
+rootProject.name='FBLA2020'
+include ':app'

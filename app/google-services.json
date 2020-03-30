@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "368403097563",
+    "firebase_url": "https://ohsfbla-321e7.firebaseio.com",
+    "project_id": "ohsfbla-321e7",
+    "storage_bucket": "ohsfbla-321e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368403097563:android:9a1dfa457ca755054e69fe",
+        "android_client_info": {
+          "package_name": "olyapps.sathv.fbla2020"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368403097563-9dal8aj1oodelcnghrvlpv83qqrvr4oh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC00aaQHrFpbUkvosdZCNkBA7eCnFajvXA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368403097563-9dal8aj1oodelcnghrvlpv83qqrvr4oh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "368403097563-0so38438ebrfjj3ajmr2etcmv3ohf6kt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "COM.THESWIFT.MobileAppFBLA2020"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

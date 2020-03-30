@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/custom_bar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/custom_bar_seen"
+        android:layout_alignTop="@+id/custom_view_switcher"
+        android:ellipsize="end"
+        android:maxWidth="175dp"
+        android:text="Display Name"
+        android:textColor="@color/actionbarcolor"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/custom_bar_seen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/custom_bar_title"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@+id/custom_view_switcher"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingBottom="5dp"
+        android:text="Last Seen"
+        android:textColor="@color/actionbarcolor"
+        android:textSize="13sp" />
+
+    <ViewSwitcher
+        android:id="@+id/custom_view_switcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="10dp">
+
+        <me.fahmisdk6.avatarview.AvatarView
+            android:id="@+id/custom_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/custom_view_switcher"
+            android:layout_centerHorizontal="true"
+            app:avBgTextColor="@color/actionbarcolor"
+            app:avCornerRadius="6dp"
+            app:avTextColor="@color/white"
+            app:avTextSize="6sp">
+
+        </me.fahmisdk6.avatarview.AvatarView>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/custom_bar_image"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignStart="@+id/linearLayout2"
+            android:layout_below="@+id/textView16"
+            android:background="@color/trans"
+            android:scaleType="centerCrop"
+            android:src="@drawable/defaultimg"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.027"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.378" />
+    </ViewSwitcher>
+
+    <ImageButton
+        android:id="@+id/viewmembercustom"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignTop="@+id/leavegroup"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@+id/leavegroup"
+        android:background="@color/trans"
+        android:scaleType="centerCrop"
+        android:visibility="visible"
+        app:srcCompat="@drawable/viewmember" />
+
+    <ImageButton
+        android:id="@+id/leavegroup"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignTop="@+id/am"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@+id/am"
+        android:background="@color/trans"
+        android:scaleType="centerCrop"
+        android:visibility="visible"
+        app:srcCompat="@drawable/leave" />
+
+    <ImageButton
+        android:id="@+id/am"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/custom_bar_title"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/trans"
+        android:scaleType="centerCrop"
+        android:visibility="visible"
+        app:srcCompat="@drawable/icgroupdark" />
+
+    <ImageView
+        android:id="@+id/custom_online"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@+id/custom_bar_title"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@+id/custom_bar_title"
+        app:srcCompat="@drawable/onlineicon" />
+
+</RelativeLayout>

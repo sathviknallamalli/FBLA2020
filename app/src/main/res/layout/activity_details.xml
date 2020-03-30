@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.sathv.ohsfbla.oly.example.sathv.ohsfbla.Details">
+
+    <TextView
+        android:id="@+id/bigcategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/bigname"
+        android:layout_below="@+id/bigname"
+        android:text="TextView"
+        android:textColor="@color/browser_actions_title_color"
+        android:textSize="14sp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/bigtype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/bigcategory"
+        android:layout_below="@+id/bigcategory"
+        android:text="TextView"
+        android:textColor="@color/browser_actions_title_color"
+        android:textSize="14sp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/bigname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="21dp"
+        android:text="TextView"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/bigtype"
+        android:layout_marginTop="17dp"
+        app:srcCompat="@drawable/line" />
+
+    <Button
+        android:id="@+id/ratingsheet"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_above="@+id/imageView6"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="17dp"
+        android:background="@android:color/holo_orange_dark"
+        android:text="Rating Sheet"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="12sp" />
+
+    <ProgressBar
+        android:id="@+id/pbe"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView6"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="169dp"
+        tools:layout_editor_absoluteX="171dp"
+        tools:layout_editor_absoluteY="175dp" />
+
+    <WebView
+        android:id="@+id/eventinfowv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="110dp">
+
+    </WebView>
+
+</RelativeLayout>

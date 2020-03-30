@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/rowname"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="7dp"
+        android:text="rowname"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        tools:text="rowname" />
+
+    <Button
+        android:id="@+id/delete"
+        android:layout_width="60dp"
+        android:layout_height="35dp"
+        android:layout_alignStart="@+id/rowname"
+        android:layout_below="@+id/rowname"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="7dp"
+        android:text="Delete"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="10sp" />
+
+    <Button
+        android:id="@+id/viewteam"
+        android:layout_width="60dp"
+        android:layout_height="35dp"
+        android:layout_alignTop="@+id/delete"
+        android:layout_below="@+id/rowname"
+        android:layout_marginStart="7dp"
+        android:layout_toEndOf="@+id/delete"
+        android:text="View"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="10sp" />
+
+    <Button
+        android:id="@+id/approvalstatus"
+        android:layout_width="90dp"
+        android:layout_height="37dp"
+        android:layout_alignEnd="@+id/viewteam"
+        android:layout_alignStart="@+id/delete"
+        android:layout_below="@id/delete"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="0dp"
+        android:text="Approval Status"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="10sp" />
+
+    <Button
+        android:id="@+id/addmember"
+        android:layout_width="70dp"
+        android:layout_height="37dp"
+        android:layout_below="@+id/viewteam"
+        android:layout_marginStart="7dp"
+        android:layout_toEndOf="@+id/rowname"
+        android:text="+ Member"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="10sp" />
+
+</RelativeLayout>

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.example.sathv.ohsfbla.oly.example.sathv.ohsfbla.Settings">
+
+    <TextView
+        android:id="@+id/textView43"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="25dp"
+        android:text="BASIC"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/imageView21"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView43"
+        android:layout_marginTop="11dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/line" />
+
+    <EditText
+        android:id="@+id/f"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/imageView21"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:gravity="top"
+        android:hint="f"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/company"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/f"
+        android:layout_below="@+id/f"
+        android:ems="10"
+        android:gravity="top"
+        android:hint="Company"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/position"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/company"
+        android:layout_below="@+id/company"
+        android:ems="10"
+        android:gravity="top"
+        android:hint="Position"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/l"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/f"
+        android:layout_alignBottom="@+id/f"
+        android:layout_marginStart="14dp"
+        android:layout_toEndOf="@+id/f"
+        android:ems="10"
+        android:gravity="top"
+        android:hint="l"
+        android:inputType="textPersonName" />
+
+    <ImageView
+        android:id="@+id/imageView25"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/camclick"
+        android:layout_marginTop="14dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/line" />
+
+    <TextView
+        android:id="@+id/textView44"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView43"
+        android:layout_below="@+id/imageView25"
+        android:layout_marginTop="20dp"
+        android:text="CONTACT DETAILS"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/imageView26"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/textView44"
+        android:layout_below="@+id/textView44"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/cloudcirc" />
+
+    <ViewSwitcher
+        android:id="@+id/vsetting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/l"
+        android:layout_marginStart="24dp"
+        android:layout_toEndOf="@+id/l">
+
+        <me.fahmisdk6.avatarview.AvatarView
+            android:id="@+id/profpicset"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="6dp"
+            app:avBgTextColor="@android:color/holo_red_light"
+            app:avCornerRadius="8dp"
+            app:avTextColor="@color/white"
+            app:avTextSize="18dp">
+
+        </me.fahmisdk6.avatarview.AvatarView>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/circset"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_alignStart="@+id/linearLayout2"
+            android:layout_below="@+id/textView16"
+            android:background="@color/trans"
+            android:scaleType="centerCrop"
+            android:src="@drawable/defaultimg"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.027"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.378" />
+    </ViewSwitcher>
+
+    <ImageButton
+        android:id="@+id/camclick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/lo"
+        android:layout_below="@+id/vsetting"
+        android:layout_marginEnd="25dp"
+        android:background="@color/trans"
+        app:srcCompat="@drawable/circcam" />
+
+    <EditText
+        android:id="@+id/web"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/vsetting"
+        android:layout_alignTop="@+id/imageView26"
+        android:layout_toEndOf="@+id/textView43"
+        android:ems="10"
+        android:hint="Website"
+        android:inputType="textWebEmailAddress" />
+
+    <ImageView
+        android:id="@+id/imageView27"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/imageView26"
+        android:layout_below="@+id/web"
+        android:layout_marginLeft="2dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/emailcirc" />
+
+    <EditText
+        android:id="@+id/em"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/vsetting"
+        android:layout_alignStart="@+id/web"
+        android:layout_below="@+id/web"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textEmailAddress" />
+
+    <ImageView
+        android:id="@+id/imageView28"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignEnd="@+id/imageView27"
+        android:layout_below="@+id/em"
+        android:layout_marginLeft="20dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/phonecirc" />
+
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/em"
+        android:layout_alignStart="@+id/em"
+        android:layout_below="@+id/em"
+        android:ems="10"
+        android:hint="Phone"
+        android:inputType="phone" />
+
+    <Button
+        android:id="@+id/lo"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/phone"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp"
+        android:background="@android:color/holo_red_light"
+        android:text="LOG OUT"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

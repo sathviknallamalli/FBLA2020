@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/officer_takenote"
+        android:icon="@drawable/ic_addnote"
+        android:title="Note"
+        android:iconTint="@color/black"
+        android:visible="true"
+        app:showAsAction="always"></item>
+    <item
+        android:id="@+id/officer_share"
+        android:icon="@drawable/ic_share"
+        android:title="Share"
+        android:iconTint="@color/black"
+        android:visible="true"
+        app:showAsAction="always"></item>
+    <item
+        android:id="@+id/officer_person"
+        android:icon="@drawable/ic_profwhite"
+        android:title="Profile"
+        android:iconTint="@color/black"
+        android:visible="true"
+        app:showAsAction="always"></item>
+</menu>

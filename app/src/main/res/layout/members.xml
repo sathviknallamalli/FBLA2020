@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageButton
+        android:id="@+id/addbg"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_above="@+id/allmembers"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:background="@color/trans"
+        android:paddingLeft="10dp"
+        app:srcCompat="@drawable/addgroupblack" />
+
+    <Button
+        android:id="@+id/talktoofficer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/allmembers"
+        android:background="@color/actionbarcolor"
+        android:paddingEnd="30dp"
+        android:paddingStart="35dp"
+        android:text="Talk to Officer"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/talktoadvisor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/allmembers"
+        android:layout_alignParentBottom="true"
+        android:background="@color/actionbarcolor"
+        android:paddingEnd="35dp"
+        android:paddingStart="30dp"
+        android:text="Talk to advisor"
+        android:textColor="@color/white" />
+
+    <ListView
+        android:id="@+id/allmembers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/talktoofficer"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/sb"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.379">
+
+    </ListView>
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/sb"
+        android:theme="@style/AppSearchView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:id="@+id/noconvo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="250dp"
+        android:text="No conversations"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:visibility="invisible" />
+
+</RelativeLayout>

@@ -1,0 +1,280 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="0dp">
+
+    <ImageView
+        android:id="@+id/imageView17"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/whiteimg" />
+
+    <ListView
+        android:id="@+id/teameventslist"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/currentevents"
+        android:layout_alignTop="@+id/currentevents"
+        android:layout_toEndOf="@+id/currentevents"
+        android:paddingLeft="5dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95" />
+
+    <Button
+        android:id="@+id/addteamevent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/currentevents"
+        android:layout_toEndOf="@+id/currentevents"
+        android:background="@color/st"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="Team event"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorPrimary" />
+
+    <ListView
+        android:id="@+id/currentevents"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/addevent"
+        android:layout_below="@+id/addevent"
+        android:layout_marginTop="5dp"
+        android:paddingRight="5dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="@id/addevent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95">
+
+    </ListView>
+
+    <Button
+        android:id="@+id/addevent"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/fullname5"
+        android:layout_below="@+id/fullname5"
+        android:layout_marginTop="13dp"
+        android:background="@color/st"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="Add an event"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.552" />
+
+    <TextView
+        android:id="@+id/fullname5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/open"
+        android:layout_below="@+id/open"
+        android:layout_marginTop="17dp"
+        android:text="Your Events"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.029"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.404" />
+
+    <Button
+        android:id="@+id/approvals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/regitseredevents"
+        android:layout_alignBottom="@+id/regitseredevents"
+        android:layout_marginStart="13dp"
+        android:layout_toEndOf="@+id/regitseredevents"
+        android:background="@color/st"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:text="Approvals"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorPrimary" />
+
+    <Button
+        android:id="@+id/regitseredevents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/open"
+        android:layout_alignBottom="@+id/open"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@+id/open"
+        android:background="@color/st"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:text="Save Events to File"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorPrimary" />
+
+    <Button
+        android:id="@+id/open"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/viewSwitcher"
+        android:layout_below="@+id/linearLayout3"
+        android:layout_marginTop="15dp"
+        android:background="@color/st"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:text="Open File"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorPrimary" />
+
+    <ListView
+        android:id="@+id/onlyifuradvisor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/addteamevent"
+        android:paddingEnd="0dp"
+        android:paddingStart="0dp"
+        android:visibility="invisible" />
+
+    <ViewSwitcher
+        android:id="@+id/viewSwitcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="20dp">
+
+        <me.fahmisdk6.avatarview.AvatarView
+            android:id="@+id/profpic"
+            android:layout_width="115dp"
+            android:layout_height="115dp"
+            android:layout_above="@+id/addevent"
+            android:layout_centerHorizontal="true"
+            app:avBgTextColor="@color/actionbarcolor"
+            app:avCornerRadius="12dp"
+            app:avTextSize="14dp">
+
+        </me.fahmisdk6.avatarview.AvatarView>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/circleprofpic"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_alignStart="@+id/profpic"
+            android:layout_alignTop="@+id/profpic"
+            android:layout_marginTop="0dp"
+            android:background="@color/trans"
+            android:scaleType="centerCrop"
+            android:src="@drawable/defaultimg"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.027"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.378" />
+
+    </ViewSwitcher>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/viewSwitcher"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/viewSwitcher"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/fullname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/viewSwitcher"
+            android:layout_toEndOf="@+id/addevent"
+            android:text="John Smith"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3" />
+
+        <TextView
+            android:id="@+id/fullgradyear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/fullname"
+            android:layout_below="@+id/fullname"
+            android:layout_marginTop="5dp"
+            android:text="2021"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3" />
+
+        <TextView
+            android:id="@+id/fullemail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/viewSwitcher"
+            android:layout_alignStart="@+id/fullgradyear"
+            android:layout_alignTop="@+id/viewSwitcher"
+            android:layout_below="@+id/fullgradyear"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/viewSwitcher"
+            android:text="snallamalli25@yahoo.com"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3" />
+
+        <TextView
+            android:id="@+id/fullusername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/viewSwitcher"
+            android:layout_alignStart="@+id/fullgradyear"
+            android:layout_alignTop="@+id/viewSwitcher"
+            android:layout_below="@+id/fullgradyear"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/viewSwitcher"
+            android:text="un"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3" />
+    </LinearLayout>
+
+</RelativeLayout>

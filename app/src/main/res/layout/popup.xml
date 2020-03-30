@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.example.sathv.ohsfbla.oly.example.sathv.ohsfbla.FBLAHome">
+
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/button_outlineblue"
+        android:text="Cancel"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/addevent"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/button_outlineblue"
+        android:text="Add"
+        android:textColor="@color/white" />
+
+    <EditText
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:drawableLeft="@drawable/title"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/cancel"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Title"
+        android:inputType="textPersonName|textCapSentences" />
+
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/title"
+        android:layout_alignTop="@+id/switch1"
+        app:srcCompat="@drawable/cal" />
+
+    <ImageView
+        android:id="@+id/imageView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/uremail"
+        android:layout_alignTop="@+id/reminderspinner"
+        app:srcCompat="@drawable/bell" />
+
+    <ImageButton
+        android:id="@+id/backbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/title"
+        android:layout_alignStart="@+id/title"
+        android:background="@color/trans"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_back" />
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/title"
+        android:layout_below="@+id/title"
+        android:layout_marginLeft="46dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="17dp"
+        android:text="All day"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView34"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/imageView8"
+        android:layout_below="@+id/imageView8"
+        android:layout_marginTop="11dp"
+        android:paddingRight="5dp"
+        android:text="Start"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/startdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView34"
+        android:layout_alignBottom="@+id/textView34"
+        android:layout_alignStart="@+id/switch1"
+        android:paddingRight="5dp"
+        android:text="Current date:"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/enddate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView35"
+        android:layout_alignBottom="@+id/textView35"
+        android:layout_toEndOf="@id/textView35"
+        android:layout_alignStart="@+id/startdate"
+        android:paddingRight="5dp"
+        android:text="End date:"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/starttime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/startdate"
+        android:layout_alignBottom="@+id/startdate"
+        android:layout_alignEnd="@+id/switch1"
+        android:layout_marginStart="13dp"
+        android:layout_toEndOf="@id/startdate"
+        android:text="8:00 AM"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/endtime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/enddate"
+        android:layout_alignBottom="@+id/enddate"
+        android:layout_alignStart="@+id/starttime"
+        android:layout_marginStart="0dp"
+        android:layout_toEndOf="@id/enddate"
+        android:text="9:00 AM"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textView35"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView34"
+        android:layout_below="@+id/textView34"
+        android:paddingRight="5dp"
+        android:paddingTop="8dp"
+        android:text="End"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/uremail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/enddate"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="27dp"
+        android:text="TextView"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <Spinner
+        android:id="@+id/reminderspinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/uremail"
+        android:layout_below="@+id/uremail"
+        android:layout_marginLeft="46dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="22dp" />
+
+    <EditText
+        android:id="@+id/customnotes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/imageView15"
+        android:layout_below="@+id/imageView15"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="24dp"
+        android:drawableLeft="@drawable/notes"
+        android:ems="10"
+        android:hint="Notes"
+        android:inputType="textMultiLine"
+        android:textSize="16sp" />
+
+</RelativeLayout>

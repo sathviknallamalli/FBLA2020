@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_board"
+            android:icon="@drawable/board"
+            android:title="Activity Stream" />
+        <item
+            android:id="@+id/nav_calendar"
+            android:icon="@drawable/event"
+            android:title="Calendar" />
+        <item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/info"
+            android:title="General Info" />
+        <item
+            android:id="@+id/nav_conf"
+            android:icon="@drawable/work"
+            android:title="How FBLA works?" />
+        <item
+            android:id="@+id/nav_ourinfo"
+            android:icon="@drawable/ic_ourinfo"
+            android:title="Our Information" />
+        <item
+            android:id="@+id/nav_club"
+            android:icon="@drawable/ic_club"
+            android:title="The Club" />
+        <item
+            android:id="@+id/nav_welcome"
+            android:icon="@drawable/business"
+            android:title="FBLA-PBL" />
+        <item
+            android:id="@+id/nav_chapmembers"
+            android:icon="@drawable/ic_message"
+            android:title="Messaging"
+            app:actionViewClass="android.widget.TextView" />
+        <item
+            android:id="@+id/nav_budget"
+            android:icon="@drawable/budget"
+            android:title="Payment Information" />
+        <item
+            android:id="@+id/nav_myfbla"
+            android:icon="@drawable/person"
+            android:title="MyFBLA"
+            app:actionViewClass="android.widget.TextView"/>
+        <item
+            android:id="@+id/nav_events"
+            android:icon="@drawable/ic_playlist"
+            android:title="Competitive Events" />
+
+        <item
+            android:id="@+id/nav_notes"
+            android:icon="@drawable/notes"
+            android:title="Meeting Notes" />
+        <item
+            android:id="@+id/nav_officers"
+            android:icon="@drawable/ic_office"
+            android:title="Chapter Officers" />
+        <item
+            android:id="@+id/nav_social"
+            android:icon="@drawable/ic_world"
+            android:title="Social Media" />
+        <item
+            android:id="@+id/nav_privacy"
+            android:icon="@drawable/privacyicon"
+            android:title="Privacy Policy" />
+    </group>
+
+
+</menu>

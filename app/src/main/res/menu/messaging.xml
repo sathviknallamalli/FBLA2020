@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/searchmessages"
+        android:icon="@drawable/ic_search"
+        android:iconTint="@color/colorPrimaryDark"
+        android:title="Share"
+        android:visible="true"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always"></item>
+    <item
+        android:id="@+id/add_group"
+        android:icon="@drawable/ic_addgroup"
+        android:iconTint="@color/black"
+        android:title="Add group"
+        android:visible="true"
+        app:showAsAction="always"></item>
+</menu>
