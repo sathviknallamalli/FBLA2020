@@ -1,9 +1,9 @@
 package olyapps.sathv.fbla2020;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -15,8 +15,8 @@ public class Instructions extends AppCompatActivity {
     ViewPagerAdapter adapter;
 
     int[] images = {R.drawable.s1, R.drawable.s2, R.drawable.s3, R.drawable.s4,
-            R.drawable.s5, R.drawable.s6, R.drawable.s7, R.drawable.s8,
-            R.drawable.s9, R.drawable.s10, R.drawable.ic_launcher_background};
+            R.drawable.s5, R.drawable.s6, R.drawable.s8,
+            R.drawable.s9};
 
     LinearLayout sliderDotspanel;
     private int dotscount;
@@ -30,11 +30,8 @@ public class Instructions extends AppCompatActivity {
             " social media to view photos and moments from chapter events and conferences.",
             "Admins and those who can post will be able to post and all the members can view them. Things such as" +
                     "dates and important reminders will be posted", "Adding a new post is very simple and you can also add a picture",
-            "All the payment information about yourself can be viewed and different sheets have been displayed. You can find your yourname" +
-                    "and see more details about that sheet's payment information",
             "Creating an account will require this information and will change based on this personal information", "You will be" +
-            "able to view all your FBLA image such as events and you have the freedom to edit as well", "An aesthetic login page " +
-            "that makes it easy for the members to log in and keep track of all the FBLA information", ""};
+            "able to view all your FBLA image such as events and you have the freedom to edit as well"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +78,16 @@ public class Instructions extends AppCompatActivity {
                 if (position == pager.getAdapter().getCount() - 1) {
                     //start next Activity here with activity_next.xml layout
 
-                  /*  Intent intent = new Intent(Instructions.this, FBLAHome.class);
-                    startActivity(intent);
-                    finish();*/
 
-                    Toast.makeText(Instructions.this, "Please wait until your account has been approved. " +
-                            "A maximum of 24hrs will be needed to verify your account", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(Instructions.this, FBLAHome.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
+                            finish();
+
+
+
+
+
                 }
             }
 

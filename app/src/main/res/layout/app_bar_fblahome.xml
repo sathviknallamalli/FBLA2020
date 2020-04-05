@@ -5,9 +5,9 @@ xmlns:tools="http://schemas.android.com/tools"
 android:id="@+id/coordinatorLayout3"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context="com.example.sathv.ohsfbla.oly.example.sathv.ohsfbla.FBLAHome">
+tools:context="olyapps.sathv.fbla2020.FBLAHome">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -16,7 +16,7 @@ tools:context="com.example.sathv.ohsfbla.oly.example.sathv.ohsfbla.FBLAHome">
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,7 +24,7 @@ tools:context="com.example.sathv.ohsfbla.oly.example.sathv.ohsfbla.FBLAHome">
             android:background="@color/white"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme" />
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
         android:id="@+id/frameLayout"

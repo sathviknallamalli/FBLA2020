@@ -192,7 +192,7 @@ public class FBLAHome extends AppCompatActivity
                             addToBackStack(null).commit();
                 }else if (extras != null && extras.equals("gotomyfbla")) {
                     android.app.FragmentTransaction fragmentTransaction1 = getFragmentManager().beginTransaction();
-                    fragmentTransaction1.replace(R.id.frameLayout, new MyFBLA());
+                  //  fragmentTransaction1.replace(R.id.frameLayout, new MyFBLA());
                     fragmentTransaction1.commit();
                 }else if (extras != null && extras.equals("gotocal")) {
                     android.app.FragmentTransaction fragmentTransaction1 = getFragmentManager().beginTransaction();
@@ -203,21 +203,6 @@ public class FBLAHome extends AppCompatActivity
 
         }
 
-                final HomeWatcher mHomeWatcher = new HomeWatcher(v.getContext());
-        mHomeWatcher.setOnHomePressedListener(new OnHomePressedListener() {
-            @Override
-            public void onHomePressed() {
-                mAuth = FirebaseAuth.getInstance();
-                DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Users");
-                dr.child(mAuth.getCurrentUser().getUid()).child("online").setValue(ServerValue.TIMESTAMP);
-                finish();
-                //   mHomeWatcher.stopWatch();
-            }
-            @Override
-            public void onHomeLongPressed() {
-            }
-        });
-        mHomeWatcher.startWatch();
 
         ImageButton sharebutton = v.findViewById(R.id.sharebutton);
         sharebutton.setOnClickListener(new View.OnClickListener() {
@@ -305,13 +290,13 @@ public class FBLAHome extends AppCompatActivity
         } else if (id == R.id.nav_welcome) {
             fragmentTransaction.replace(R.id.frameLayout, new Welcome());
             fragmentTransaction.commit();
-        } else if (id == R.id.nav_budget) {
+        } /*else if (id == R.id.nav_budget) {
             startActivity(new Intent(FBLAHome.this, Head.class));
-        } else if (id == R.id.nav_social) {
+        } */else if (id == R.id.nav_social) {
             fragmentTransaction.replace(R.id.frameLayout, new SocialMedia());
             fragmentTransaction.commit();
         } else if (id == R.id.nav_myfbla) {
-            fragmentTransaction.replace(R.id.frameLayout, new MyFBLA());
+           // fragmentTransaction.replace(R.id.frameLayout, new MyFBLA());
             fragmentTransaction.commit();
         } else if (id == R.id.nav_notes) {
             fragmentTransaction.replace(R.id.frameLayout, new MeetingNotes());
@@ -324,7 +309,7 @@ public class FBLAHome extends AppCompatActivity
         }  if (id == R.id.nav_chapmembers) {
             fragmentManager.beginTransaction().replace(R.id.frameLayout, new ComboFragments()).
                     addToBackStack(null).commit();
-        }  else if (id == R.id.nav_conf) {
+        } /* else if (id == R.id.nav_conf) {
             fragmentTransaction.replace(R.id.frameLayout, new HowItWorks());
             fragmentTransaction.commit();
         } else if (id == R.id.nav_ourinfo) {
@@ -337,7 +322,7 @@ public class FBLAHome extends AppCompatActivity
         }else if (id == R.id.nav_club) {
             fragmentTransaction.replace(R.id.frameLayout, new Club());
             fragmentTransaction.commit();
-        }else if (id == R.id.nav_privacy) {
+        }*/else if (id == R.id.nav_privacy) {
             fragmentTransaction.replace(R.id.frameLayout, new PrivacyPolicy());
             fragmentTransaction.commit();
         }

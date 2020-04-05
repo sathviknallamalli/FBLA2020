@@ -18,18 +18,6 @@
             android:icon="@drawable/info"
             android:title="General Info" />
         <item
-            android:id="@+id/nav_conf"
-            android:icon="@drawable/work"
-            android:title="How FBLA works?" />
-        <item
-            android:id="@+id/nav_ourinfo"
-            android:icon="@drawable/ic_ourinfo"
-            android:title="Our Information" />
-        <item
-            android:id="@+id/nav_club"
-            android:icon="@drawable/ic_club"
-            android:title="The Club" />
-        <item
             android:id="@+id/nav_welcome"
             android:icon="@drawable/business"
             android:title="FBLA-PBL" />
@@ -39,10 +27,6 @@
             android:title="Messaging"
             app:actionViewClass="android.widget.TextView" />
         <item
-            android:id="@+id/nav_budget"
-            android:icon="@drawable/budget"
-            android:title="Payment Information" />
-        <item
             android:id="@+id/nav_myfbla"
             android:icon="@drawable/person"
             android:title="MyFBLA"
@@ -51,11 +35,14 @@
             android:id="@+id/nav_events"
             android:icon="@drawable/ic_playlist"
             android:title="Competitive Events" />
-
+        <item
+            android:id="@+id/nav_events"
+            android:icon="@drawable/ic_playlist"
+            android:title="Join FBLA" />
         <item
             android:id="@+id/nav_notes"
             android:icon="@drawable/notes"
-            android:title="Meeting Notes" />
+            android:title="Chapter Meetings" />
         <item
             android:id="@+id/nav_officers"
             android:icon="@drawable/ic_office"
@@ -64,6 +51,10 @@
             android:id="@+id/nav_social"
             android:icon="@drawable/ic_world"
             android:title="Social Media" />
+        <item
+            android:id="@+id/nav_social"
+            android:icon="@drawable/ic_world"
+            android:title="Contact" />
         <item
             android:id="@+id/nav_privacy"
             android:icon="@drawable/privacyicon"

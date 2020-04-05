@@ -7,7 +7,6 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -25,8 +24,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -212,9 +209,6 @@ public class LockScreen extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("hi");
-        dr.setValue("bye");
-
         staticlist = new ArrayList<>();
         adapter = new MyArrayAdapter(LockScreen.this, staticlist);
 
@@ -246,7 +240,6 @@ public class LockScreen extends AppCompatActivity {
                         pbl.setVisibility(View.GONE);
                     } else {
                         login.setEnabled(false);
-                        Log.d("PANDAGA", "login button press");
 
                         mAuth.signInWithEmailAndPassword(enteredemail, enteredpassword)
                                 .addOnCompleteListener(LockScreen.this, new OnCompleteListener<AuthResult>() {
@@ -256,7 +249,6 @@ public class LockScreen extends AppCompatActivity {
                                             FirebaseUser user = mAuth.getCurrentUser();
                                             updateUI(user);
                                             pbl.setVisibility(View.GONE);
-                                            Log.d("PANDAGA", "login success");
 
                                         } else {
                                             if (!isNetworkConnected()) {
@@ -333,7 +325,6 @@ public class LockScreen extends AppCompatActivity {
 
             final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
 
-            mDatabase.child("device_token").setValue(FirebaseInstanceId.getInstance().getToken());
 
             mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
                 @Override
@@ -362,60 +353,12 @@ public class LockScreen extends AppCompatActivity {
                         }
                         editor.apply();
 
-                        if (dataSnapshot.child("role").getValue().toString().equals("Officer")) {
-                            FirebaseMessaging.getInstance().subscribeToTopic("Officers")
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                            }
-                                        }
-                                    });
-                        } else if (dataSnapshot.child("role").getValue().toString().equals("Member")) {
-                            FirebaseMessaging.getInstance().subscribeToTopic("Members")
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            String msg = getString(R.string.msg_subscribed);
-                                            if (!task.isSuccessful()) {
-                                                msg = getString(R.string.msg_subscribe_failed);
-                                            }
-                                        }
-                                    });
-                        } else if (dataSnapshot.child("role").getValue().toString().equals("Advisor")) {
-                            FirebaseMessaging.getInstance().subscribeToTopic("Advisors")
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                            }
-                                        }
-                                    });
-                        }
+
 
 
                         getallpeeps(dataSnapshot.child("fname").getValue().toString(),
                                 dataSnapshot.child("lname").getValue().toString(),
                                 dataSnapshot.child("email").getValue().toString());
-
-                        if (dataSnapshot.child("status").exists()) {
-
-                            String status = dataSnapshot.child("status").getValue().toString();
-
-                            if (status.equals("0")) {
-                                Toast.makeText(LockScreen.this, "Your account has not been approved yet. Please wait", Toast.LENGTH_SHORT).show();
-                            } else if (status.equals("1")) {
-                                Intent intent = new Intent(LockScreen.this, Hello.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        }
-                        //testing purpose
-                        else {
-                            Intent intent = new Intent(LockScreen.this, Hello.class);
-                            startActivity(intent);
-                            finish();
-                        }
                     }
 
                 }

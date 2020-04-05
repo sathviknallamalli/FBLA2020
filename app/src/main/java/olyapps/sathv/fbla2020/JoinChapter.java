@@ -49,7 +49,6 @@ public class JoinChapter extends AppCompatActivity {
                                     .setTitle("Confirm Chapter Details")
                                     .setMessage("Chapter ID: "+ dataSnapshot.child(enteredchapid.getText().toString()).child("ID").getValue()
                                     + "\nChapter Name: " + dataSnapshot.child(enteredchapid.getText().toString()).child("ChapterName").getValue()
-                                            + "\nAdviser Email: " + dataSnapshot.child(enteredchapid.getText().toString()).child("AdviserEmail").getValue()
                                     + "\nState: " + dataSnapshot.child(enteredchapid.getText().toString()).child("State").getValue() +
                                             "\nZip code: " + dataSnapshot.child(enteredchapid.getText().toString()).child("Zip").getValue())
 
@@ -70,6 +69,7 @@ public class JoinChapter extends AppCompatActivity {
                                             intent.putExtra("officercode", dataSnapshot.child(enteredchapid.getText().toString()).child("OfficerCode").getValue().toString());
                                             intent.putExtra("advisercode", dataSnapshot.child(enteredchapid.getText().toString()).child("AdviserCode").getValue().toString());
                                             intent.putExtra("chapterid", enteredchapid.getText().toString());
+                                            intent.putExtra("chapterlogourl", dataSnapshot.child(enteredchapid.getText().toString()).child("ChapterLogo").getValue().toString());
 
                                             startActivity(intent);
                                             overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);

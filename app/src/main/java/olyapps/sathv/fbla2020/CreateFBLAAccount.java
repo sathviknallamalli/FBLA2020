@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,23 +19,39 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,15 +69,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import olyapps.sathv.fbla2020.adapter.MyArrayAdapter;
 import olyapps.sathv.fbla2020.model.MyDataModel;
 import olyapps.sathv.fbla2020.parser.JSONParser;
-import olyapps.sathv.fbla2020.util.InternetConnection;
 import olyapps.sathv.fbla2020.util.Keys;
 
 
 public class CreateFBLAAccount extends AppCompatActivity {
 
+    private static final int RC_SIGN_IN =1 ;
     EditText fname, lname, email, username, password, cpd;
 
     String firstname, lastname, enteredemail, enteredusername, enteredpassword, enteredgradyear;
+
+    String theirrole;
 
     private FirebaseAuth mAuth;
 
@@ -78,8 +97,28 @@ public class CreateFBLAAccount extends AppCompatActivity {
 
     ArrayAdapter<CharSequence> adapter;
     MyArrayAdapter adaptera;
+    CallbackManager mCallbackManager;
 
-    DatabaseReference mDevTokens;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account);
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+                Log.w("DARBAR", "Google sign in failed", e);
+                // ...
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +133,12 @@ public class CreateFBLAAccount extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        ImageView chapterlogo = findViewById(R.id.cchapterlogo);
+        Intent i = getIntent();
+        String imageurl = i.getExtras().getString("chapterlogourl");
+        theirrole = i.getExtras().getString("role");
 
+        Glide.with(getApplicationContext()).load(imageurl).into(chapterlogo);
 
 
         LinearLayout linlayout = findViewById(R.id.linlayout);
@@ -138,6 +182,46 @@ public class CreateFBLAAccount extends AppCompatActivity {
         gradyear.setSelection(0);
 
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("368403097563-9dal8aj1oodelcnghrvlpv83qqrvr4oh.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+        final GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        SignInButton createwithg = findViewById(R.id.createwithg);
+        createwithg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, RC_SIGN_IN);
+            }
+        });
+
+
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginButton loginButton = findViewById(R.id.createwithfb);
+        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d("DARBAR", "facebook:onSuccess:" + loginResult);
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d("DARBAR", "facebook:onCancel");
+                // ...
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d("DARBAR", "facebook:onError", error);
+                // ...
+            }
+        });
+
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,7 +241,7 @@ public class CreateFBLAAccount extends AppCompatActivity {
                 numberm = numberp.matcher(enteredpassword);
 
                 if (firstname.isEmpty() || lastname.isEmpty() || enteredemail.isEmpty() || enteredusername.isEmpty() ||
-                        enteredpassword.isEmpty() || enteredgradyear.equals("Please select your highschool gradyear")) {
+                        enteredpassword.isEmpty() || enteredgradyear.equals("Select your graduation year")) {
                     Toast.makeText(CreateFBLAAccount.this, "Missing field(s)", Toast.LENGTH_SHORT).show();
                 } else {
                     if (!Patterns.EMAIL_ADDRESS.matcher(enteredemail).matches()) {
@@ -181,8 +265,6 @@ public class CreateFBLAAccount extends AppCompatActivity {
                     } else {
 
 
-
-
                         AlertDialog.Builder builder = new AlertDialog.Builder(CreateFBLAAccount.this);
                         builder.setCancelable(false);
                         builder.setTitle("Privacy Policy");
@@ -198,12 +280,12 @@ public class CreateFBLAAccount extends AppCompatActivity {
                                                     public void onComplete(Task<AuthResult> task) {
                                                         if (task.isSuccessful()) {
                                                             FirebaseUser user = mAuth.getCurrentUser();
-                                                            updateUI(user);
-                                                           // sendemailtoallofficers();
+                                                            updateUI(user, null, null);
+                                                            sendEmailtoAdvisers();
                                                         } else {
                                                             Toast.makeText(CreateFBLAAccount.this, "Signup failed",
                                                                     Toast.LENGTH_SHORT).show();
-                                                            updateUI(null);
+                                                            updateUI(null, null, null);
                                                         }
 
                                                         // ...
@@ -217,6 +299,7 @@ public class CreateFBLAAccount extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                             }
                         });
+                        builder.show();
 
 
                     }
@@ -225,21 +308,77 @@ public class CreateFBLAAccount extends AppCompatActivity {
 
             }
         });
+
+
     }
 
-    public void sendemailtoallofficers() {
-        DatabaseReference d = FirebaseDatabase.getInstance().getReference().child("Users");
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
+        Log.d("DARBAR", "firebaseAuthWithGoogle:" + acct.getId());
+
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("DARBAR", "signInWithCredential:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user, acct, null);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("DARBAR", "signInWithCredential:failure", task.getException());
+                            updateUI(null, null, null);
+                        }
+
+                        // ...
+                    }
+                });
+    }
+
+    private void handleFacebookAccessToken(final AccessToken token) {
+        Log.d("DARBAR", "handleFacebookAccessToken:" + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("DARBAR", "signInWithCredential:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user, null, token);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("DARBAR", "signInWithCredential:failure", task.getException());
+
+                            updateUI(null, null, null);
+                        }
+
+                        // ...
+                    }
+                });
+    }
+
+
+    public void sendEmailtoAdvisers() {
+        Intent i = getIntent();
+        String chapid = i.getExtras().getString("chapterid");
+
+        DatabaseReference d = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid).child("Advisers");
 
         d.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<String> emails = collectemails((Map<String, Object>) dataSnapshot.getValue());
+                ArrayList<String> emails = collectCertainField((Map<String, Object>) dataSnapshot.getValue(), "email");
                 for (int i = 0; i < emails.size(); i++) {
-                    String subject = "New User Approval";
-                    String message = "A new user is trying to create an account to signup for the app, OHS FBLA.\n" +
-                            "Here is the student's information.\n\nFirst yourname: " + firstname + "\nLast yourname: " + lastname +
-                            "\nEmail: " + enteredemail + "\nUID: " + mAuth.getUid() + "\nTheir role: "  + "\nIf you approve of this person, go to the Firebase Console and " +
-                            "change their STATUS from 0 to 1.\nIf you dont approve, keep the STATUS at 0.";
+                    String subject = "New Member";
+                    String message = "A new member is joining your FBLA Chapter" +
+                            "Here is the student's information.\n\nFirst name: " + firstname + "\nLast name: " + lastname +
+                            "\nEmail: " + enteredemail + "\nUser ID: " + mAuth.getUid() + "\nTheir role: " + theirrole +
+                            "\nTo approve this member, go to the Approvals page in the app and change their status";
                     SendMail sm = new SendMail(CreateFBLAAccount.this, emails.get(i), subject, message);
                     sm.execute();
                 }
@@ -252,7 +391,7 @@ public class CreateFBLAAccount extends AppCompatActivity {
         });
     }
 
-    private ArrayList<String> collectemails(Map<String, Object> users) {
+    private ArrayList<String> collectCertainField(Map<String, Object> users, String whatyouwant) {
         ArrayList<String> information = new ArrayList<>();
         //iterate through each user, ignoring their UID
         for (Map.Entry<String, Object> entry : users.entrySet()) {
@@ -262,11 +401,7 @@ public class CreateFBLAAccount extends AppCompatActivity {
             //Get phone field and append to list
 
             if (singleUser != null) {
-                if (singleUser.get("role").toString().equals("Officer")) {
-                    information.add((String) singleUser.get("email"));
-                } else {
-
-                }
+                information.add((String) singleUser.get(whatyouwant));
             }
 
         }
@@ -274,7 +409,9 @@ public class CreateFBLAAccount extends AppCompatActivity {
         return information;
     }
 
-    private void updateUI(final FirebaseUser user) {
+
+
+    private void updateUI(final FirebaseUser user, GoogleSignInAccount account, AccessToken token) {
         if (user != null) {
 
             String userid = user.getUid();
@@ -282,84 +419,117 @@ public class CreateFBLAAccount extends AppCompatActivity {
             //Get the role that the user already confirmed in the MemberRole class.
             Intent intent = getIntent();
             String enteredrole = intent.getExtras().getString("role");
-            String chapterid = intent.getExtras().getString("chapterid");
+            final String chapterid = intent.getExtras().getString("chapterid");
 
             DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapterid).child("Users")
                     .child(userid);
 
-            //ADD new user to chapter database
-            dr.child("fname").setValue(firstname);
-            dr.child("lname").setValue(lastname);
-            dr.child("email").setValue(enteredemail);
-            dr.child("password").setValue(enteredpassword);
-            dr.child("username").setValue(enteredusername);
-            dr.child("graduationyear").setValue(enteredgradyear);
-            dr.child("role").setValue(enteredrole);
-            dr.child("uid").setValue(userid);
-            dr.child("status").setValue("0");
-            dr.child("device_token").setValue(FirebaseInstanceId.getInstance().getToken());
+            String FULLNAME = "";
+            String logintype = "";
+
+            if(account!=null & token==null){
+                //GMAIL USER
+                logintype = "GMAIL";
+                FULLNAME = account.getDisplayName();
+                dr.child("fname").setValue(account.getGivenName());
+                dr.child("lname").setValue(account.getFamilyName());
+                dr.child("email").setValue(account.getEmail());
+                dr.child("profpic").setValue(account.getPhotoUrl());
+                //GET USERNAME AND GRAD YEAR FROM SETUP ACTIVITY
+                dr.child("accounttype").setValue("GMAIL");
+                dr.child("role").setValue(enteredrole);
+                dr.child("uid").setValue(userid);
+                dr.child("device_token").setValue(FirebaseInstanceId.getInstance().getToken());
+
+                SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+
+                editor.putString(getString(R.string.fname), account.getGivenName());
+                editor.putString(getString(R.string.lname), account.getDisplayName());
+                editor.putString(getString(R.string.email), account.getEmail());
+                //GET USERNAME AND GRAD YEAR INTO SAVED PREFS OF SETUP ACTIVITY
+                editor.putString(getString(R.string.role), enteredrole);
+                editor.putString(getString(R.string.uid), userid);
+                editor.putString(getString(R.string.deviceToken), FirebaseInstanceId.getInstance().getToken());
+
+                editor.apply();
+
+            }else if(account==null && token!=null){
+              //FACEBOOK USER
+                logintype = "FACEBOOK";
+            } else if (account==null && token==null){
+                //LOCAL USER
+                logintype = "LOCAL";
+                FULLNAME = firstname + " " + lastname;
+                dr.child("fname").setValue(firstname);
+                dr.child("lname").setValue(lastname);
+                dr.child("email").setValue(enteredemail);
+                dr.child("password").setValue(enteredpassword);
+                dr.child("username").setValue(enteredusername);
+                dr.child("graduationyear").setValue(enteredgradyear);
+                dr.child("accounttype").setValue("LOCAL");
+                dr.child("role").setValue(enteredrole);
+                dr.child("uid").setValue(userid);
+                dr.child("device_token").setValue(FirebaseInstanceId.getInstance().getToken());
+
+                SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+
+                editor.putString(getString(R.string.fname), firstname);
+                editor.putString(getString(R.string.lname), lastname);
+                editor.putString(getString(R.string.email), enteredemail);
+                editor.putString(getString(R.string.password), enteredpassword);
+                editor.putString(getString(R.string.username), enteredusername);
+                editor.putString(getString(R.string.role), enteredrole);
+                editor.putString(getString(R.string.grade), enteredgradyear);
+                editor.putString(getString(R.string.uid), userid);
+                editor.putString(getString(R.string.deviceToken), FirebaseInstanceId.getInstance().getToken());
+
+                editor.apply();
+            }
 
 
-            //SEND NOTIFICATION TO ADVISER ABOUT NEW USER
-            /*DatabaseReference drip = FirebaseDatabase.getInstance().getReference();
-            final DatabaseReference update = FirebaseDatabase.getInstance().getReference().child("notificationsNewUser");
 
 
-            drip.addListenerForSingleValueEvent(new ValueEventListener() {
+            DatabaseReference devtokens = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapterid).child("Advisers");
+            final String finalFULLNAME = FULLNAME;
+            devtokens.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    ArrayList<String> roll = officerdevicetokens((Map<String, Object>) dataSnapshot.getValue());
-                    String add = "";
-                    for (int i = 0; i < roll.size(); i++) {
-                        add = add + roll.get(i).toString() + ",";
+                    ArrayList<String> adevtoks = collectCertainField((Map<String, Object>) dataSnapshot.getValue(), "uid");
+
+                    for (int i = 0; i < adevtoks.size(); i++) {
+                        FirebaseDatabase.getInstance().getReference().child("Chapters").child("5791").child("Advisers").child(adevtoks.get(i))
+                                .child("Notifications").push().child("Title").setValue("New Member");
+                        FirebaseDatabase.getInstance().getReference().child("Chapters").child("5791").child("Advisers").child(adevtoks.get(i))
+                                .child("Notifications").push().child("Message").setValue("You have a new user joining your chapter. Member name: " + finalFULLNAME);
+
                     }
-                    update.child("e2045442-9c2e-11e8-98d0-529269fb1459").child("officerdevicetokens").setValue(add);
+
+
+
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-            });*/
+            });
 
 
-            SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sp.edit();
-
-            editor.putString(getString(R.string.fname), firstname);
-            editor.putString(getString(R.string.lname), lastname);
-            editor.putString(getString(R.string.email), enteredemail);
-            editor.putString(getString(R.string.password), enteredpassword);
-            editor.putString(getString(R.string.username), enteredusername);
-            editor.putString(getString(R.string.role), enteredrole);
-            editor.putString(getString(R.string.grade), enteredgradyear);
-            editor.putString(getString(R.string.uid), userid);
-            editor.putString(getString(R.string.deviceToken), FirebaseInstanceId.getInstance().getToken());
-
-            editor.apply();
 
 
-            LockScreen ls = new LockScreen();
+
+           /* LockScreen ls = new LockScreen();
             ls.getallevents();
             ls.getallpeeps(firstname, lastname, enteredemail);
             ls.getGroups();
             if (InternetConnection.checkConnection(CreateFBLAAccount.this)) {
                 new GetDataTask().execute();
-            }
+            }*/
 
-            firstname = firstname.replace("\\s+", "");
-            lastname = lastname.replace("\\s+", "");
-            firstname = firstname.replace(" ", "");
-            lastname = lastname.replace(" ", "");
-            FirebaseMessaging.getInstance().subscribeToTopic(firstname + lastname)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                            }
-                        }
-                    });
 
+            final String finalLogintype = logintype;
             user.sendEmailVerification()
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -367,6 +537,8 @@ public class CreateFBLAAccount extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 // email sent
                                 Intent intent = new Intent(getApplicationContext(), Setup.class);
+                                intent.putExtra("chapid", chapterid);
+                                intent.putExtra("logintype", finalLogintype);
                                 startActivity(intent);
                                 Toast.makeText(CreateFBLAAccount.this, "A verification email has been sent," +
                                         " please check the entered email and verify your account", Toast.LENGTH_LONG).show();
@@ -524,23 +696,6 @@ public class CreateFBLAAccount extends AppCompatActivity {
         }
     }
 
-    private ArrayList<String> officerdevicetokens(Map<String, Object> users) {
-        ArrayList<String> information = new ArrayList<>();
-        //iterate through each user, ignoring their UID
-        for (Map.Entry<String, Object> entry : users.entrySet()) {
 
-            //Get user map
-            Map singleUser = (Map) entry.getValue();
-            //Get phone field and append to list
-
-            if (singleUser.get("role").toString().equals("Officer")) {
-                if (singleUser.get("device_token") != null && !singleUser.get("device_token").toString().isEmpty()) {
-                    information.add(singleUser.get("device_token").toString());
-                }
-            }
-        }
-
-        return information;
-    }
 
 }

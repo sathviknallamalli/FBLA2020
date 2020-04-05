@@ -31,6 +31,7 @@ public class MemberRole extends AppCompatActivity {
         final String memberkey =  intent.getExtras().getString("membercode");
         final String officerkey = intent.getExtras().getString("officercode");
         final String adviserkey = intent.getExtras().getString("advisercode");
+        final String imageurl = intent.getExtras().getString("chapterlogourl");
 
         setTitle("Join Chapter: " + id);
 
@@ -84,6 +85,7 @@ public class MemberRole extends AppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), CreateFBLAAccount.class);
                         intent.putExtra("role", desiredrole);
                         intent.putExtra("chapterid", id);
+                        intent.putExtra("chapterlogourl", imageurl);
                         startActivity(intent);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();

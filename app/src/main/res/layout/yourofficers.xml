@@ -526,7 +526,87 @@
 
             </android.support.v7.widget.CardView>
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:layout_weight="8" />
 
+            <TextView
+                android:id="@+id/textView72"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:text="2018 Nationals Highlights Video: "
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <VideoView
+                android:id="@+id/player_view2"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_weight="8"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="0dp" />
+
+            <Button
+                android:id="@+id/ourinfo2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:text="Our Information" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="17dp"
+                android:layout_weight="8" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="14dp"
+                android:layout_weight="8" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="14dp"
+                android:layout_weight="8" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:layout_weight="8" />
+
+            <TextView
+                android:id="@+id/textView70"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:text="\nOlympia High School FBLA is a competition based club that allows students to participate in the events created by the FBLA organization. The intention of the club and its meetings are to provide information to members about the competition as well as prep and help for the competition\n\nWe meet every Friday during Beartime B in Mr. Fabritius's room"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView69"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:text="Club Description"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView71"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:text='More information about our region, chapter, and state go to the "Our Information" tab'
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
 
 
         </GridLayout>

@@ -19,6 +19,20 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
+        Button gotolock = findViewById(R.id.gotolock);
+        gotolock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), LockScreen.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                finish();
+
+
+
+            }
+        });
+
 
         pb = findViewById(R.id.pb);
         pb.setVisibility(View.GONE);

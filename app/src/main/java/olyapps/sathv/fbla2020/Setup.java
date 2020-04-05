@@ -7,8 +7,12 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,7 +35,6 @@ public class Setup extends AppCompatActivity {
 
     CircleImageView imageButton;
     Button done;
-    TextView fnamesetup, lnamesetup, emailsetup;
 
     private static final int GALLEY_REQUEST = 1;
 
@@ -41,7 +44,7 @@ public class Setup extends AppCompatActivity {
     Uri mImageuri = null;
     StorageReference mstorageimage;
 
-    DatabaseReference dr;
+
 
     ProgressDialog mProgress;
 
@@ -53,25 +56,46 @@ public class Setup extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
+        Intent i = getIntent();
+        final String logintype = i.getExtras().getString("logintype");
+
+        final Spinner grad = findViewById(R.id.setupgrad);
+        final EditText username = findViewById(R.id.setupusername);
+
         mstorageimage = FirebaseStorage.getInstance().getReference().child("Profile_Images");
         imageButton = findViewById(R.id.profimage);
         done = findViewById(R.id.donebutton);
-        fnamesetup = findViewById(R.id.fnamesetup);
-        lnamesetup = findViewById(R.id.lnamesetup);
-        emailsetup = findViewById(R.id.emailsetup);
+
+        if(logintype.equals("GMAIL")){
+            grad.setVisibility(View.VISIBLE);
+            username.setVisibility(View.VISIBLE);
+            imageButton.setVisibility(View.GONE);
+        } else if(logintype.equals("LOCAL")){
+            grad.setVisibility(View.GONE);
+            username.setVisibility(View.GONE);
+            imageButton.setVisibility(View.VISIBLE);
+        }
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.gradyear, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        grad.setAdapter(adapter);
+        grad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
+                //parent.getItemAtPosition(position)
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+
+        });
+        grad.setSelection(0);
+
         mProgress = new ProgressDialog(this);
 
-        SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
-        String firstnae = sp.getString(getString(R.string.fname), "fname");
-        String lastname = sp.getString(getString(R.string.lname), "lname");
-        String emailname = sp.getString(getString(R.string.email), "email");
 
-
-        dr = FirebaseDatabase.getInstance().getReference().child("Users");
-
-        fnamesetup.setText(firstnae);
-        lnamesetup.setText(lastname);
-        emailsetup.setText(emailname);
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +110,37 @@ public class Setup extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startaccountsetup();
+
+                if(logintype.equals("LOCAL")){
+                    startaccountsetup();
+                } else if(logintype.equals("GMAIL")){
+
+                    if(username.getText().toString().isEmpty() || grad.getSelectedItem().toString().equals("Select your graduation year")){
+                        Toast.makeText(Setup.this, "Missing field(s)", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Intent i = getIntent();
+                        String chapid = i.getExtras().getString("chapid");
+
+                        DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid).child("Users");
+                        dr.child(mAuth.getCurrentUser().getUid()).child("username").setValue(username.getText().toString());
+                        dr.child(mAuth.getCurrentUser().getUid()).child("gradyear").setValue(grad.getSelectedItem().toString());
+
+                        SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+
+                        editor.putString(getString(R.string.username), username.getText().toString());
+                        editor.putString(getString(R.string.grade), grad.getSelectedItem().toString());
+
+                        editor.apply();
+
+                        Intent intent = new Intent(getApplicationContext(), Instructions.class);
+                        startActivity(intent);
+                        finish();
+                    }
+
+
+                }
+
             }
         });
 
@@ -113,13 +167,16 @@ public class Setup extends AppCompatActivity {
     }
 
     public void startaccountsetup() {
-        String replace;
-        final String userid = mAuth.getCurrentUser().getUid();
+       final String userid = mAuth.getCurrentUser().getUid();
         mProgress.setMessage("Finishing setup...");
         mProgress.show();
         if (mImageuri == null) {
-            replace = "nocustomimage";
-            dr.child(userid).child("profpic").setValue(replace);
+
+            Intent i = getIntent();
+            String chapid = i.getExtras().getString("chapid");
+
+            DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid).child("Users");
+            dr.child(userid).child("profpic").setValue("nocustomimage");
 
             SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
@@ -154,6 +211,10 @@ public class Setup extends AppCompatActivity {
 
                         mProgress.dismiss();
 
+                        Intent i = getIntent();
+                        String chapid = i.getExtras().getString("chapid");
+
+                        DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid).child("Users");
                         dr.child(userid).child("profpic").setValue(downloadUri.toString());
 
                         SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
