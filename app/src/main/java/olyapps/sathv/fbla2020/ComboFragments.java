@@ -23,7 +23,6 @@ public class ComboFragments extends Fragment {
     }
 
 
-
     View view;
     TabLayout tabLayout;
 
@@ -36,12 +35,12 @@ public class ComboFragments extends Fragment {
         //set the title of the screen
 
 
-setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
 
-        tabLayout  = (TabLayout) view.findViewById(R.id.result_tabs);
+        tabLayout = (TabLayout) view.findViewById(R.id.result_tabs);
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpagerresult);
         ViewPageAdapter adapter = new ViewPageAdapter(getChildFragmentManager());
-        adapter.addfragment(new Members(), "Messages Inbox");
+        adapter.addfragment(new MessagesInbox(), "Messages Inbox");
         adapter.addfragment(new ChapterMembers(), "Members");
 
 
@@ -50,19 +49,19 @@ setHasOptionsMenu(true);
         tabLayout.setupWithViewPager(viewPager);
 
 
-       if(tabLayout.getSelectedTabPosition()==0){
-           getActivity().setTitle("Inbox");
-       }else if(tabLayout.getSelectedTabPosition()==1){
-           getActivity().setTitle("Chapter Members");
-       }
+        if (tabLayout.getSelectedTabPosition() == 0) {
+            getActivity().setTitle("Inbox");
+        } else if (tabLayout.getSelectedTabPosition() == 1) {
+            getActivity().setTitle("Chapter Members");
+        }
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
-                if(position==0){
+                if (position == 0) {
                     getActivity().setTitle("Inbox");
-                }else if(position==1){
+                } else if (position == 1) {
                     getActivity().setTitle("Chapter Members");
                 }
 
@@ -80,10 +79,6 @@ setHasOptionsMenu(true);
         });
 
 
-
-
-
-
         return view;
 
     }
@@ -92,7 +87,7 @@ setHasOptionsMenu(true);
     public void onResume() {
         super.onResume();
 
-        if(getView() == null){
+        if (getView() == null) {
             return;
         }
 
@@ -102,7 +97,7 @@ setHasOptionsMenu(true);
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
 
                     System.exit(0);
                     return true;

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -19,10 +18,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -53,11 +52,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,16 +63,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import olyapps.sathv.fbla2020.adapter.MyArrayAdapter;
-import olyapps.sathv.fbla2020.model.MyDataModel;
-import olyapps.sathv.fbla2020.parser.JSONParser;
-import olyapps.sathv.fbla2020.util.Keys;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class CreateFBLAAccount extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN =1 ;
     EditText fname, lname, email, username, password, cpd;
+
+    private static final int RC_SIGN_IN =1 ;
 
     String firstname, lastname, enteredemail, enteredusername, enteredpassword, enteredgradyear;
 
@@ -96,8 +91,14 @@ public class CreateFBLAAccount extends AppCompatActivity {
     Matcher numberm;
 
     ArrayAdapter<CharSequence> adapter;
-    MyArrayAdapter adaptera;
     CallbackManager mCallbackManager;
+
+    TextView ortv;
+
+    SignInButton createwithg;
+    LoginButton createwithfb;
+
+    Intent intent;
 
 
     @Override
@@ -133,10 +134,19 @@ public class CreateFBLAAccount extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        ImageView chapterlogo = findViewById(R.id.cchapterlogo);
-        Intent i = getIntent();
-        String imageurl = i.getExtras().getString("chapterlogourl");
-        theirrole = i.getExtras().getString("role");
+        CircleImageView chapterlogo = findViewById(R.id.cchapterlogo);
+        intent = getIntent();
+        String imageurl = intent.getExtras().getString("chapterlogourl");
+        theirrole = intent.getExtras().getString("role");
+
+        ortv = findViewById(R.id.ortv);
+
+        if(theirrole.equals("Adviser")){
+            gradyear.setVisibility(View.GONE);
+            ortv.setVisibility(View.GONE);
+            createwithfb.setVisibility(View.GONE);
+            createwithg.setVisibility(View.GONE);
+        }
 
         Glide.with(getApplicationContext()).load(imageurl).into(chapterlogo);
 
@@ -149,7 +159,6 @@ public class CreateFBLAAccount extends AppCompatActivity {
             // TODO: handle exception
         }
 
-        adaptera = new MyArrayAdapter(CreateFBLAAccount.this, LockScreen.staticlist);
         fname = findViewById(R.id.firstname);
         lname = findViewById(R.id.lastname);
         email = findViewById(R.id.emailincreate);
@@ -188,20 +197,40 @@ public class CreateFBLAAccount extends AppCompatActivity {
                 .build();
         final GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        SignInButton createwithg = findViewById(R.id.createwithg);
+        createwithg = findViewById(R.id.createwithg);
+        setGooglePlusButtonText(createwithg,"Create Account with Google");
         createwithg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent, RC_SIGN_IN);
+                AlertDialog.Builder builder = new AlertDialog.Builder(CreateFBLAAccount.this);
+                builder.setCancelable(false);
+                builder.setTitle("Privacy Policy");
+                builder.setMessage("This app utilizes the Firebase Services. It includes utilizing the Firebase Database and Authentication and Notification Services. It will collect personal information such as name, email, username, password, and device ID to complete the necessary actions. If you agree to these terms, click Agree below to proceed.");
+                builder.setPositiveButton("Agree",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                                startActivityForResult(signInIntent, RC_SIGN_IN);
+
+                            }
+                        });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                builder.show();
+
             }
         });
 
 
         mCallbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = findViewById(R.id.createwithfb);
-        loginButton.setReadPermissions("email", "public_profile");
-        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+        createwithfb = findViewById(R.id.createwithfb);
+        createwithfb.setReadPermissions("email", "public_profile");
+        createwithfb.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d("DARBAR", "facebook:onSuccess:" + loginResult);
@@ -241,7 +270,8 @@ public class CreateFBLAAccount extends AppCompatActivity {
                 numberm = numberp.matcher(enteredpassword);
 
                 if (firstname.isEmpty() || lastname.isEmpty() || enteredemail.isEmpty() || enteredusername.isEmpty() ||
-                        enteredpassword.isEmpty() || enteredgradyear.equals("Select your graduation year")) {
+                        enteredpassword.isEmpty() || (enteredgradyear.equals("Select your graduation year") &&
+                        !theirrole.equals("Adviser"))) {
                     Toast.makeText(CreateFBLAAccount.this, "Missing field(s)", Toast.LENGTH_SHORT).show();
                 } else {
                     if (!Patterns.EMAIL_ADDRESS.matcher(enteredemail).matches()) {
@@ -281,7 +311,7 @@ public class CreateFBLAAccount extends AppCompatActivity {
                                                         if (task.isSuccessful()) {
                                                             FirebaseUser user = mAuth.getCurrentUser();
                                                             updateUI(user, null, null);
-                                                            sendEmailtoAdvisers();
+
                                                         } else {
                                                             Toast.makeText(CreateFBLAAccount.this, "Signup failed",
                                                                     Toast.LENGTH_SHORT).show();
@@ -367,21 +397,24 @@ public class CreateFBLAAccount extends AppCompatActivity {
         Intent i = getIntent();
         String chapid = i.getExtras().getString("chapterid");
 
-        DatabaseReference d = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid).child("Advisers");
+        DatabaseReference d = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid);
 
         d.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<String> emails = collectCertainField((Map<String, Object>) dataSnapshot.getValue(), "email");
-                for (int i = 0; i < emails.size(); i++) {
-                    String subject = "New Member";
-                    String message = "A new member is joining your FBLA Chapter" +
-                            "Here is the student's information.\n\nFirst name: " + firstname + "\nLast name: " + lastname +
-                            "\nEmail: " + enteredemail + "\nUser ID: " + mAuth.getUid() + "\nTheir role: " + theirrole +
-                            "\nTo approve this member, go to the Approvals page in the app and change their status";
-                    SendMail sm = new SendMail(CreateFBLAAccount.this, emails.get(i), subject, message);
-                    sm.execute();
+                if(dataSnapshot.child("Roles").child("AdviserRules").getValue().toString().contains("2")){
+                    ArrayList<String> emails = collectCertainField((Map<String, Object>) dataSnapshot.child("Advisers").getValue(), "email");
+                    for (int i = 0; i < emails.size(); i++) {
+                        String subject = "New Member";
+                        String message = "A new member is joining your FBLA Chapter" +
+                                "Here is the student's information.\n\nFirst name: " + firstname + "\nLast name: " + lastname +
+                                "\nEmail: " + enteredemail + "\nUser ID: " + mAuth.getUid() + "\nTheir role: " + theirrole +
+                                "\nTo approve this member, go to the Approvals page in the app and change their status";
+                        SendMail sm = new SendMail(CreateFBLAAccount.this, emails.get(i), subject, message);
+                        sm.execute();
+                    }
                 }
+
             }
 
             @Override
@@ -397,12 +430,15 @@ public class CreateFBLAAccount extends AppCompatActivity {
         for (Map.Entry<String, Object> entry : users.entrySet()) {
 
             //Get user map
-            Map singleUser = (Map) entry.getValue();
-            //Get phone field and append to list
+            if(!entry.getKey().toString().equals("device_tokens")){
+                Map singleUser = (Map) entry.getValue();
+                //Get phone field and append to list
 
-            if (singleUser != null) {
-                information.add((String) singleUser.get(whatyouwant));
+                if (singleUser != null) {
+                    information.add((String) singleUser.get(whatyouwant));
+                }
             }
+
 
         }
 
@@ -421,7 +457,21 @@ public class CreateFBLAAccount extends AppCompatActivity {
             String enteredrole = intent.getExtras().getString("role");
             final String chapterid = intent.getExtras().getString("chapterid");
 
-            DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapterid).child("Users")
+            String childid="";
+
+            if(enteredrole.equals("Adviser")){
+                childid = "Advisers";
+            }else if(enteredrole.equals("Officer") || enteredrole.equals("Member")){
+                childid = "Users";
+            }
+
+            SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editorchap = spchap.edit();
+
+            editorchap.putString("chapterID",chapterid);
+            editorchap.apply();
+
+            DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapterid).child(childid)
                     .child(userid);
 
             String FULLNAME = "";
@@ -434,7 +484,7 @@ public class CreateFBLAAccount extends AppCompatActivity {
                 dr.child("fname").setValue(account.getGivenName());
                 dr.child("lname").setValue(account.getFamilyName());
                 dr.child("email").setValue(account.getEmail());
-                dr.child("profpic").setValue(account.getPhotoUrl());
+                dr.child("profpic").setValue(account.getPhotoUrl().toString());
                 //GET USERNAME AND GRAD YEAR FROM SETUP ACTIVITY
                 dr.child("accounttype").setValue("GMAIL");
                 dr.child("role").setValue(enteredrole);
@@ -454,6 +504,8 @@ public class CreateFBLAAccount extends AppCompatActivity {
 
                 editor.apply();
 
+
+
             }else if(account==null && token!=null){
               //FACEBOOK USER
                 logintype = "FACEBOOK";
@@ -466,9 +518,11 @@ public class CreateFBLAAccount extends AppCompatActivity {
                 dr.child("email").setValue(enteredemail);
                 dr.child("password").setValue(enteredpassword);
                 dr.child("username").setValue(enteredusername);
-                dr.child("graduationyear").setValue(enteredgradyear);
+                if(!enteredrole.equals("Adviser")){
+                    dr.child("graduationyear").setValue(enteredgradyear);
+                    dr.child("role").setValue(enteredrole);
+                }
                 dr.child("accounttype").setValue("LOCAL");
-                dr.child("role").setValue(enteredrole);
                 dr.child("uid").setValue(userid);
                 dr.child("device_token").setValue(FirebaseInstanceId.getInstance().getToken());
 
@@ -490,43 +544,47 @@ public class CreateFBLAAccount extends AppCompatActivity {
 
 
 
-
-            DatabaseReference devtokens = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapterid).child("Advisers");
-            final String finalFULLNAME = FULLNAME;
-            devtokens.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    ArrayList<String> adevtoks = collectCertainField((Map<String, Object>) dataSnapshot.getValue(), "uid");
-
-                    for (int i = 0; i < adevtoks.size(); i++) {
-                        FirebaseDatabase.getInstance().getReference().child("Chapters").child("5791").child("Advisers").child(adevtoks.get(i))
-                                .child("Notifications").push().child("Title").setValue("New Member");
-                        FirebaseDatabase.getInstance().getReference().child("Chapters").child("5791").child("Advisers").child(adevtoks.get(i))
-                                .child("Notifications").push().child("Message").setValue("You have a new user joining your chapter. Member name: " + finalFULLNAME);
-
+            if(!enteredrole.equals("Adviser")){
+                final DatabaseReference devtokens = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapterid).child("Advisers");
+                final String finalFULLNAME = FULLNAME;
+                devtokens.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull com.google.firebase.database.DataSnapshot dataSnapshot) {
+                        ArrayList<String> advuids = collectCertainField((Map<String, Object>) dataSnapshot.getValue(), "uid");
+                        Log.d("DARBAR", advuids.toString());
+                        for (int i = 0; i < advuids.size(); i++) {
+                            DatabaseReference dr = devtokens.child(advuids.get(i)).child("Notifications").push();
+                            dr.child("Title").setValue("New Member");
+                            dr.child("Message").setValue("You have a new user joining your chapter. Member name: " + finalFULLNAME);
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy  hh:mm:ss");
+                            String format = simpleDateFormat.format(new Date());
+                            dr.child("Timestamp").setValue(format);
+                        }
                     }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                    }
+                });
 
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
+                sendEmailtoAdvisers();
+            }
 
 
 
-           /* LockScreen ls = new LockScreen();
+
+
+/*
+            LockScreen ls = new LockScreen();
             ls.getallevents();
             ls.getallpeeps(firstname, lastname, enteredemail);
             ls.getGroups();
             if (InternetConnection.checkConnection(CreateFBLAAccount.this)) {
                 new GetDataTask().execute();
             }*/
+
+            //the method will check if advisers want emails or not
 
 
             final String finalLogintype = logintype;
@@ -550,6 +608,7 @@ public class CreateFBLAAccount extends AppCompatActivity {
                             }
                         }
                     });
+
         } else {
             pbc.setVisibility(View.GONE);
         }
@@ -558,7 +617,7 @@ public class CreateFBLAAccount extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Intent i = new Intent(CreateFBLAAccount.this, MemberRole.class);
+            Intent i = new Intent(CreateFBLAAccount.this, SplashScreen.class);
             startActivity(i);
             finish();
             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
@@ -569,133 +628,24 @@ public class CreateFBLAAccount extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(CreateFBLAAccount.this, MemberRole.class);
+        Intent i = new Intent(CreateFBLAAccount.this, SplashScreen.class);
         startActivity(i);
         finish();
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
-    class GetDataTask extends AsyncTask<Void, Void, Void> {
+    protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
+        // Find the TextView that is inside of the SignInButton and set its text
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View v = signInButton.getChildAt(i);
 
-        int jIndex;
-        int x;
-
-        // LockScreen.staticlist = new ArrayList<MyDataModel>;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            /**
-             * Progress Dialog for User Interaction
-             */
-            x = LockScreen.staticlist.size();
-
-            if (x == 0)
-                jIndex = 0;
-            else
-                jIndex = x;
-
-            pbc.setVisibility(View.VISIBLE);
-        }
-
-        @Nullable
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            /**
-             * Getting JSON Object from Web Using okHttp
-             */
-            JSONObject jsonObject = JSONParser.getDataFromWeb();
-
-            try {
-                /**
-                 * Check Whether Its NULL???
-                 */
-                if (jsonObject != null) {
-                    /**
-                     * Check Length...
-                     */
-                    if (jsonObject.length() > 0) {
-                        /**
-                         * Getting Array named "contacts" From MAIN Json Object
-                         */
-                        JSONArray array = jsonObject.getJSONArray(Keys.KEY_CONTACTS);
-
-                        /**
-                         * Check Length of Array...
-                         */
-
-
-                        int lenArray = array.length();
-                        if (lenArray > 0) {
-                            for (; jIndex < lenArray; jIndex++) {
-
-                                /**
-                                 * Creating Every time New Object
-                                 * and
-                                 * Adding into List
-                                 */
-                                MyDataModel model = new MyDataModel();
-
-                                /**
-                                 * Getting Inner Object from contacts array...
-                                 * and
-                                 * From that We will get Name of that Contact
-                                 *
-                                 */
-                                JSONObject innerObject = array.getJSONObject(jIndex);
-                                String firstname = innerObject.getString(Keys.KEY_FIRSTNAME);
-                                String lastname = innerObject.getString(Keys.KEY_LASTNAME);
-                                String graduation = innerObject.getString(Keys.KEY_GRADYEAR);
-                                String shirtsize = innerObject.getString(Keys.KEY_SHIRTSIZE);
-                                String clubdues = innerObject.getString(Keys.KEY_CLUBDUE);
-                                String fallc = innerObject.getString(Keys.KEY_FALLC);
-                                String winterc = innerObject.getString(Keys.KEY_WINTERC);
-                                String winterp = innerObject.getString(Keys.KEY_WINTERP);
-
-                                /**
-                                 * Getting Object from Object "phone"
-                                 */
-                                //JSONObject phoneObject = innerObject.getJSONObject(Keys.KEY_PHONE);
-                                //String phone = phoneObject.getString(Keys.KEY_MOBILE);
-
-                                model.setFirstname(firstname);
-                                model.setLastname(lastname);
-                                model.setGraduation(graduation);
-                                model.setShirtsize(shirtsize);
-                                model.setClubdues(clubdues);
-                                model.setFallc(fallc);
-                                model.setWinterc(winterc);
-                                model.setWinterpermission(winterp);
-                                /**
-                                 * Adding yourname and phone concatenation in List...
-                                 */
-                                LockScreen.staticlist.add(model);
-                            }
-                        }
-                    }
-                } else {
-
-                }
-            } catch (JSONException je) {
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            pbc.setVisibility(View.GONE);
-            /**
-             * Checking if List size if more than zero then
-             * Update ListView
-             */
-            if (LockScreen.staticlist.size() > 0) {
-                adaptera.notifyDataSetChanged();
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setText(buttonText);
+                return;
             }
         }
     }
-
 
 
 }

@@ -15,11 +15,5 @@
         android:iconTint="@color/black"
         android:visible="true"
         app:showAsAction="always"></item>
-    <item
-        android:id="@+id/officer_person"
-        android:icon="@drawable/ic_profwhite"
-        android:title="Profile"
-        android:iconTint="@color/black"
-        android:visible="true"
-        app:showAsAction="always"></item>
+
 </menu>

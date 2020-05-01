@@ -15,11 +15,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Map;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 
 
@@ -41,12 +48,10 @@ public class CompetitveEvents extends Fragment {
     ListView listofevents;
     View view;
 
-    String[] eventnames = LockScreen.getTils();
-    String[] eventtype = LockScreen.getAuths();
-    String[] eventcategory = LockScreen.getCass();
 
     private EventAdapter filteredvaluesadapter;
-    static String name, type, category;
+
+    ArrayList<String> eventnames, eventtype, eventcategory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,16 +65,34 @@ public class CompetitveEvents extends Fragment {
         listofevents = (ListView) view.findViewById(R.id.listofevents);
         events = new ArrayList<Events>();
 
+        DatabaseReference eventref = FirebaseDatabase.getInstance().getReference().child("Events");
+        eventref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                eventnames = collectEventdata((Map<String, Object>) dataSnapshot.getValue(), "eventname");
+                eventtype = collectEventdata((Map<String, Object>) dataSnapshot.getValue(), "eventtype");
+                eventcategory = collectEventdata((Map<String, Object>) dataSnapshot.getValue(), "eventcategory");
 
-        for (int i = 0; i < eventnames.length; i++) {
+                for (int i = 0; i < eventnames.size(); i++) {
 
-            //add checked book to arraylist
-            events.add(new Events(eventnames[i], eventcategory[i], eventtype[i]));
+                    //add checked book to arraylist
+                    events.add(new Events(eventnames.get(i), eventcategory.get(i), eventtype.get(i)));
 
-        }
-        //set adapter
-        adapter = new EventAdapter(getActivity().getApplicationContext(), R.layout.event_item, events);
-        listofevents.setAdapter(adapter);
+                }
+                //set adapter
+                adapter = new EventAdapter(getActivity().getApplicationContext(), R.layout.event_item, events);
+                listofevents.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
 
         listofevents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -79,12 +102,10 @@ public class CompetitveEvents extends Fragment {
 
                 //based on what book is
 
-                name = eventnames[i];
-                type = eventtype[i];
-                category = eventcategory[i];
-
-
                 Intent appInfo = new Intent(view.getContext(), Details.class);
+                appInfo.putExtra("name", eventnames.get(i));
+                appInfo.putExtra("type", eventtype.get(i));
+                appInfo.putExtra("category", eventcategory.get(i));
                 startActivity(appInfo);
 
                 FragmentManager fm = getFragmentManager();
@@ -135,10 +156,13 @@ public class CompetitveEvents extends Fragment {
         resetSearch();
         //inflater.inflate(R.menu.activities, menu);
         MenuItem searchItem = menu.findItem(R.id.searchevents);
+        Drawable drawable = searchItem.getIcon();
+        if (drawable != null) {
+            drawable.mutate();
+            drawable.setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+        }
         SearchView searchView = (SearchView) searchItem.getActionView();
 
-        ImageView icon = searchView.findViewById(R.id.search_button);
-        icon.setColorFilter(R.color.colorPrimary);
         //the listener
         SearchView.OnQueryTextListener listener = new SearchView.OnQueryTextListener() {
             @Override
@@ -182,12 +206,10 @@ public class CompetitveEvents extends Fragment {
 
                             //based on what book is
 
-                            name = filteredValues.get(i).getEventname();
-                            type = filteredValues.get(i).getEventtype();
-                            category = filteredValues.get(i).getEventcategory();
-
-
                             Intent appInfo = new Intent(view.getContext(), Details.class);
+                            appInfo.putExtra("name", filteredValues.get(i).getEventname());
+                            appInfo.putExtra("type", filteredValues.get(i).getEventtype());
+                            appInfo.putExtra("category", filteredValues.get(i).getEventcategory());
                             startActivity(appInfo);
 
 
@@ -200,7 +222,7 @@ public class CompetitveEvents extends Fragment {
 
         //set the appropriate listener and hint for searchbar
         searchView.setOnQueryTextListener(listener);
-        searchView.setQueryHint("Search event by yourname");
+        searchView.setQueryHint("Search event by name");
     }
 
     //reset search method used when the search bar is empty and the originnal list view is set with orig arrays
@@ -218,13 +240,12 @@ public class CompetitveEvents extends Fragment {
 
                 //based on what book is
 
-                name = eventnames[i];
-                type = eventtype[i];
-                category = eventcategory[i];
-
-
                 Intent appInfo = new Intent(view.getContext(), Details.class);
+                appInfo.putExtra("name", eventnames.get(i));
+                appInfo.putExtra("type", eventtype.get(i));
+                appInfo.putExtra("category", eventcategory.get(i));
                 startActivity(appInfo);
+
 
             }
         });
@@ -253,6 +274,25 @@ public class CompetitveEvents extends Fragment {
                 return false;
             }
         });
+    }
+
+    private ArrayList<String> collectEventdata(Map<String, Object> users, String fieldName) {
+        ArrayList<String> information = new ArrayList<>();
+        //iterate through each user, ignoring their UID
+        for (Map.Entry<String, Object> entry : users.entrySet()) {
+
+            //Get user map
+            Map singleUser = (Map) entry.getValue();
+
+            if (singleUser != null) {
+                information.add((String) singleUser.get(fieldName));
+            }
+
+            //Get phone field and append to list
+
+        }
+
+        return information;
     }
 }
 

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,23 +38,28 @@ public class Approvals extends AppCompatActivity {
     ArrayAdapter<CharSequence> spinnneradapter;
 
     ArrayList<String> names = new ArrayList<>();
-
+String chapterid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_approvals);
 
-        SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+
 
         ListView list = findViewById(R.id.listofapprovals);
 
+        SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        chapterid = spchap.getString("chapterID", "tempid");
+
+        SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
         yourname = sp.getString(getString(R.string.fname), "") + " " + sp.getString(getString(R.string.lname), "");
         role = sp.getString(getString(R.string.role), "");
         firstname = sp.getString(getString(R.string.fname), "fname");
         lastname = sp.getString(getString(R.string.lname), "lname");
 
-        DatabaseReference prema = FirebaseDatabase.getInstance().getReference().child("TeamEvents");
+        DatabaseReference prema = FirebaseDatabase.getInstance().getReference().
+                child("Chapters").child(chapterid).child("TeamEvents");
 
         setTitle("Approvals");
         final Drawable upArrow = getResources().getDrawable(R.drawable.ic_back);
@@ -78,7 +84,7 @@ public class Approvals extends AppCompatActivity {
 
                 names.clear();
 
-                if(role.equals("Advisor")){
+                if(role.equals("Adviser")){
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         String builder = "";
                         dskey = ds.getKey();
@@ -93,7 +99,7 @@ public class Approvals extends AppCompatActivity {
                             } else {
                                 important = "Approved";
                             }
-                            if (!right.getKey().toString().equals("AdvisorStatus")) {
+                            if (!right.getKey().toString().equals("AdviserStatus")) {
                                 builder = builder + name + "'s status: " + important + "\n\n";
                                 names.add(name);
                             }else{
@@ -102,13 +108,14 @@ public class Approvals extends AppCompatActivity {
                         }
 
                         approvals.add(new AnApproval(ds.getKey().toString(),
-                                "The Advisor status is " + ds.child("AdvisorStatus").getValue().toString()
+                                "The Adviser status is " + ds.child("AdviserStatus").getValue().toString()
                                         + "\n\n" + builder + "Click here to edit your approval status"));
 
                     }
                 }
 
                 else{
+                    Log.d("DARBAR", "else");
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         for (DataSnapshot second : ds.getChildren()) {
                             //this means its your events
@@ -133,14 +140,14 @@ public class Approvals extends AppCompatActivity {
                                     } else {
                                         important = "Approved";
                                     }
-                                    if (!right.getKey().toString().equals("AdvisorStatus")) {
+                                    if (!right.getKey().toString().equals("AdviserStatus")) {
                                         builder = builder + name + "'s status: " + important + "\n\n";
                                         names.add(name);
                                     }
                                 }
 
                                 approvals.add(new AnApproval(ds.getKey().toString(),
-                                        "The Advisor status is " + ds.child("AdvisorStatus").getValue().toString()
+                                        "The Adviser status is " + ds.child("AdviserStatus").getValue().toString()
                                                 + "\n\n" + builder + "Click here to edit your approval status"));
 
 
@@ -158,7 +165,7 @@ public class Approvals extends AppCompatActivity {
                 approvallist.setAdapter(adapter);
 
 
-                if(role.equals("Advisor")){
+                if(role.equals("Adviser")){
                     final String finalVal = val;
                     final String finalDskey = dskey;
                     final String finalKey = key;
@@ -167,7 +174,7 @@ public class Approvals extends AppCompatActivity {
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                             final AlertDialog.Builder builder = new AlertDialog.Builder(Approvals.this);
-                            builder.setTitle("Update Advisor Status");
+                            builder.setTitle("Update Adviser Status");
 
                             LayoutInflater inflater = Approvals.this.getLayoutInflater();
                             final View v = inflater.inflate(R.layout.custom_alert, null);
@@ -187,12 +194,14 @@ public class Approvals extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     final int pos = statusspinner.getSelectedItemPosition();
-                                    DatabaseReference fd = FirebaseDatabase.getInstance().getReference().child("TeamEvents")
-                                            .child(finalDskey).child("AdvisorStatus");
+                                    DatabaseReference fd = FirebaseDatabase.getInstance().getReference().
+                                            child("Chapters").child(chapterid).child("TeamEvents")
+                                            .child(finalDskey).child("AdviserStatus");
                                     fd.setValue(pos+ "");
 
                                     //ADVISOR NOTIFICATION
-                                    final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+                                    final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().
+                                            child("Chapters").child(chapterid).child("Users");
                                     databaseReference.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -204,7 +213,7 @@ public class Approvals extends AppCompatActivity {
                                                     FirebaseDatabase.getInstance().getReference().child("notificationUpdateStatus");
 
                                             databaseReference1.child("a8042437-91e7-4e57-b240-55de8d33d213")
-                                                    .child("DeviceTokens").setValue("Advisor" + "SEPERATOR" +
+                                                    .child("DeviceTokens").setValue("Adviser" + "SEPERATOR" +
                                                     user_device_tokens.toString() + "SEPERATOR" + finalDskey + "SEPERATOR" + pos);
                                         }
 
@@ -229,6 +238,7 @@ public class Approvals extends AppCompatActivity {
                         }
                     });
                 }else{
+                    Log.d("DARBAR", "elselcick");
                     final String finalVal = val;
                     final String finalDskey = dskey;
                     final String finalKey = key;
@@ -257,12 +267,14 @@ public class Approvals extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     final int pos = statusspinner.getSelectedItemPosition();
-                                    DatabaseReference fd = FirebaseDatabase.getInstance().getReference().child("TeamEvents")
+                                    DatabaseReference fd = FirebaseDatabase.getInstance().getReference().
+                                            child("Chapters").child(chapterid).child("TeamEvents")
                                             .child(finalDskey).child(finalKey);
                                     fd.setValue(yourname + "" + pos);
 
 
-                                    final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+                                    final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().
+                                            child("Chapters").child(chapterid).child("Users");
                                     databaseReference.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -316,9 +328,11 @@ public class Approvals extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+
         if (item.getItemId() == android.R.id.home) {
             getFragmentManager().popBackStackImmediate();
             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
@@ -329,6 +343,7 @@ public class Approvals extends AppCompatActivity {
         super.onBackPressed();
         getFragmentManager().popBackStackImmediate();
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+        finish();
     }
 
     private ArrayList<String> userDts(Map<String, Object> users, ArrayList<String> names) {

@@ -8,17 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-
-import androidx.annotation.NonNull;
 
 /**
  * Created by sathv on 6/4/2018.
@@ -53,7 +44,9 @@ public class CalendarEventAdapter extends ArrayAdapter<CalendarEvent> {
         Button sendrmeinder = convertView.findViewById(R.id.sendreminder);
         sendrmeinder.setTag(position);
 
-        if(role.equals("Officer") || role.equals("Advisor")){
+        sendrmeinder.setVisibility(View.INVISIBLE);
+
+        /*if(role.equals("Officer") || role.equals("Adviser")){
             sendrmeinder.setVisibility(View.VISIBLE);
         }else{
             sendrmeinder.setVisibility(View.INVISIBLE);
@@ -85,7 +78,7 @@ public class CalendarEventAdapter extends ArrayAdapter<CalendarEvent> {
 
 
             }
-        });
+        });*/
 
         //set the appropriate fields with the appropriate info
         bookTitle.setText(checkedBook.caldate);

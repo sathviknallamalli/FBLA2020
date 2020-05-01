@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
 
 
 /**
@@ -23,8 +22,6 @@ public class Welcome extends Fragment {
     }
 
     WebView webView;
-    ProgressBar pb;
-
     View view;
 
     @Override
@@ -33,18 +30,15 @@ public class Welcome extends Fragment {
         //create a view of the appropriate xml file and display it
         view = inflater.inflate(R.layout.welcome, container, false);
         //set the title of the screen
-        getActivity().setTitle("Welcome");
+        getActivity().setTitle("About FBLA");
 
-        String url = "http://www.fbla-pbl.org/";
+        String url = "https://www.fbla-pbl.org/";
 
 
-        pb = view.findViewById(R.id.progressBar);
-
-        webView = view.findViewById(R.id.webview);
+        webView = view.findViewById(R.id.webviewwelcome);
         webView.setWebViewClient(new myWebclient());
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(url);
-
 
         return view;
     }
@@ -53,7 +47,6 @@ public class Welcome extends Fragment {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            pb.setVisibility(View.GONE);
         }
 
         @Override

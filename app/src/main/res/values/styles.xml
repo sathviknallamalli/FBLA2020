@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/grayColor</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="titleTextColor">#0320a0</item>
+        <item name="titleTextColor">@color/colorPrimary</item>
         <item name="android:textColorSecondary">@color/colorPrimaryDark</item>
         <item name="android:actionMenuTextColor">@color/colorPrimaryDark</item>
         <item name="android:searchButtonText">@color/colorPrimaryDark</item>

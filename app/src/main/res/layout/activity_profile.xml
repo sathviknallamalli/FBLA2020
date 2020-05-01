@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="com.example.sathv.ohsfbla.oly.example.sathv.ohsfbla.Profile">
+    tools:context="olyapps.sathv.fbla2020.Profile">
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
 
         android:id="@+id/viewpager_id"
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="@+id/tabs"
         app:layout_constraintVertical_bias="1.0">
 
-    </android.support.v4.view.ViewPager>
+    </androidx.viewpager.widget.ViewPager>
 
     <ImageView
         android:id="@+id/imageView16"
@@ -37,7 +37,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/yellowbg" />
+        app:srcCompat="@drawable/splashgrad" />
 
     <ViewSwitcher
         android:id="@+id/vs"
@@ -61,7 +61,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="2dp"
             android:layout_marginTop="6dp"
-            app:avBgTextColor="@color/orange"
+            app:avBgTextColor="@color/design_default_color_primary"
             app:avCornerRadius="8dp"
             app:avTextColor="@color/white"
             app:avTextSize="20sp">
@@ -99,7 +99,7 @@
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textAlignment="center"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/tabs"
         app:layout_constraintEnd_toEndOf="parent"
@@ -108,10 +108,10 @@
         app:layout_constraintTop_toBottomOf="@+id/vs"
         app:layout_constraintVertical_bias="0.0" />
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/imageView16"
         android:background="@drawable/background"
@@ -127,6 +127,6 @@
         app:tabSelectedTextColor="@color/actionbarcolor"
         app:tabTextColor="@color/actionbarcolor">
 
-    </android.support.design.widget.TabLayout>
+    </com.google.android.material.tabs.TabLayout>
 
 </RelativeLayout>

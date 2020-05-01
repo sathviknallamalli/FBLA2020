@@ -18,6 +18,9 @@
             android:id="@+id/textView57"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:textStyle="bold"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:paddingBottom="5dp"
@@ -37,11 +40,12 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="16dp"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
             android:text="Your role is an adviser. Chapters that have officers can be given special access to certain actions in this app. Check below what officers and advisers will be allowed"
             android:textAlignment="center"
-            android:textColor="@android:color/secondary_text_light"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -54,6 +58,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
             android:layout_marginTop="16dp"
             android:text="Officer can..."
             android:textSize="20sp"
@@ -67,8 +73,8 @@
             android:layout_marginRight="32dp"
             android:layout_marginTop="8dp"
             android:text="Post on chapter activity stream"
+            android:textColor="@color/white"
             android:textSize="15sp" />
-
 
 
         <CheckBox
@@ -79,6 +85,7 @@
             android:layout_marginRight="32dp"
             android:layout_marginTop="8dp"
             android:text="Schedule events in the chapter calendar"
+            android:textColor="@color/white"
             android:textSize="15sp" />
 
         <CheckBox
@@ -89,6 +96,7 @@
             android:layout_marginRight="32dp"
             android:layout_marginTop="8dp"
             android:text="Send out notifications"
+            android:textColor="@color/white"
             android:textSize="15sp" />
 
         <CheckBox
@@ -99,6 +107,7 @@
             android:layout_marginRight="32dp"
             android:layout_marginTop="8dp"
             android:text="Manage meeting attendance"
+            android:textColor="@color/white"
             android:textSize="15sp" />
 
         <TextView
@@ -108,6 +117,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:text="Adviser can..."
+            android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -119,6 +129,7 @@
             android:layout_marginRight="32dp"
             android:layout_marginTop="8dp"
             android:text="Post on chapter activity stream"
+            android:textColor="@color/white"
             android:textSize="15sp" />
 
         <CheckBox
@@ -129,6 +140,7 @@
             android:layout_marginRight="32dp"
             android:layout_marginTop="8dp"
             android:text="Send out notifications"
+            android:textColor="@color/white"
             android:textSize="15sp" />
 
         <CheckBox
@@ -139,6 +151,7 @@
             android:layout_marginRight="32dp"
             android:layout_marginTop="8dp"
             android:text="Receive emails about new members"
+            android:textColor="@color/white"
             android:textSize="15sp" />
 
         <CheckBox
@@ -149,6 +162,7 @@
             android:layout_marginRight="32dp"
             android:layout_marginTop="8dp"
             android:text="Manage meeting attendance"
+            android:textColor="@color/white"
             android:textSize="15sp" />
 
         <TextView
@@ -160,15 +174,15 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
-            android:text="Next step is to generate codes for each role. Members will use these codes to signup for an account. MAKE SURE TO GIVE THE RIGHT CODE TO EACH PERSON"
+            android:text="Next step is to generate codes for each role. Users will use these codes to sign up for an account.\nMAKE SURE TO GIVE THE RIGHT CODE TO EACH PERSON"
             android:textAlignment="center"
-            android:textColor="@android:color/secondary_text_light"
+            android:textColor="@color/white"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/registernew"
-            tools:text="Next step is to generate codes for each role. Members will use these codes to signup for an account. MAKE SURE TO GIVE THE RIGHT CODE TO EACH PERSON" />
+            tools:text="Next step is to generate codes for each role. Users will use these codes to sign up for an account.\nMAKE SURE TO GIVE THE RIGHT CODE TO EACH PERSON" />
 
         <Button
             android:id="@+id/finishroles"
@@ -195,7 +209,7 @@
             android:layout_marginTop="8dp"
             android:text="membercode"
             android:textAlignment="center"
-            android:textColor="@android:color/secondary_text_light"
+            android:textColor="@color/white"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -215,7 +229,7 @@
             android:layout_marginTop="8dp"
             android:text="officercode"
             android:textAlignment="center"
-            android:textColor="@android:color/secondary_text_light"
+            android:textColor="@color/white"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -236,7 +250,7 @@
             android:layout_marginTop="8dp"
             android:text="advisercode"
             android:textAlignment="center"
-            android:textColor="@android:color/secondary_text_light"
+            android:textColor="@color/white"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

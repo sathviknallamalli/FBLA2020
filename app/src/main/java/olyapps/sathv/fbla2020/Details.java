@@ -25,11 +25,20 @@ public class Details extends AppCompatActivity {
     WebView eventinfo;
     ProgressBar pb;
         FirebaseAuth mAuth;
+
+        Intent i;
+
+        String url;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        setTitle(CompetitveEvents.name);
+
+        i = getIntent();
+
+
+
+        setTitle(i.getExtras().getString("name"));
         final Drawable upArrow = getResources().getDrawable(R.drawable.ic_back);
         upArrow.setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
@@ -42,11 +51,11 @@ mAuth = FirebaseAuth.getInstance();
 
         pb = findViewById(R.id.pbe);
 
-        bigname.setText(CompetitveEvents.name);
-        bigcategory.setText(CompetitveEvents.category);
-        bigtype.setText(CompetitveEvents.type);
+        bigname.setText(i.getExtras().getString("name"));
+        bigcategory.setText(i.getExtras().getString("category"));
+        bigtype.setText(i.getExtras().getString("type"));
 
-        String name = CompetitveEvents.name;
+        String name = i.getExtras().getString("name");
         name = name.toLowerCase();
 
         name = name.replaceAll(" &", "");
@@ -55,7 +64,7 @@ mAuth = FirebaseAuth.getInstance();
 
         String urlbasic = "https://www.fbla-pbl.org/competitive-event/";
 
-        String url = urlbasic + name + "/";
+        url = urlbasic + name + "/";
 
         eventinfo = findViewById(R.id.eventinfowv);
         eventinfo.setWebViewClient(new myWebclient());
@@ -64,23 +73,27 @@ mAuth = FirebaseAuth.getInstance();
 
 
         Button rating = findViewById(R.id.ratingsheet);
+        final String finalName = name;
         rating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (CompetitveEvents.category.equals("Objective Test")) {
+                if (i.getExtras().getString("category").equals("Objective Test")) {
                     Toast.makeText(Details.this, "Testing events have no rating sheet", Toast.LENGTH_SHORT).show();
-                } else if (CompetitveEvents.category.equals("Team Performance")) {
+                } else if (i.getExtras().getString("category").equals("Team Performance")) {
                     Toast.makeText(Details.this, "Team Performance have no rating sheet", Toast.LENGTH_SHORT).show();
-                } else if (CompetitveEvents.name.equals("Spreadsheet Applications")) {
+                } else if (i.getExtras().getString("category").equals("Spreadsheet Applications")) {
                     Toast.makeText(Details.this, "No rating sheet available", Toast.LENGTH_SHORT).show();
-                } else if (CompetitveEvents.name.equals("Computer Applications")) {
+                } else if (i.getExtras().getString("category").equals("Computer Applications")) {
                     Toast.makeText(Details.this, "No rating sheet available", Toast.LENGTH_SHORT).show();
-                } else if (CompetitveEvents.name.equals("Word Processing")) {
+                } else if (i.getExtras().getString("category").equals("Word Processing")) {
                     Toast.makeText(Details.this, "No rating sheet available", Toast.LENGTH_SHORT).show();
-                } else if (CompetitveEvents.name.equals("Database Design & Application")) {
+                } else if (i.getExtras().getString("category").equals("Database Design & Application")) {
                     Toast.makeText(Details.this, "No rating sheet available", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), RatingSheet.class);
+                    intent.putExtra("name", finalName);
+                    intent.putExtra("category",i.getExtras().getString("category"));
+                    intent.putExtra("type",i.getExtras().getString("type"));
                     startActivity(intent);
                 }
             }
@@ -94,9 +107,9 @@ mAuth = FirebaseAuth.getInstance();
         if (item.getItemId() == R.id.item_share) {
             Intent myIntent = new Intent(Intent.ACTION_SEND);
             myIntent.setType("text/plain");
-            String sharebody = "Hey, check out " + CompetitveEvents.name;
-            String sharesub = "Go to the FBLA website or OHSFBLA to check out more about this event.\n" +
-                    CompetitveEvents.name;
+            String sharesub = "Check out " + i.getExtras().getString("name");
+            String sharebody = "Go to the FBLA website or FBLAChapters to check out more about this event.\n" +
+                    i.getExtras().getString("name") + "\nHeres the link: " + url;
             myIntent.putExtra(Intent.EXTRA_SUBJECT, sharesub);
             myIntent.putExtra(Intent.EXTRA_TEXT, sharebody);
             startActivity(Intent.createChooser(myIntent, "Share with"));
@@ -106,7 +119,8 @@ mAuth = FirebaseAuth.getInstance();
             //save it with ifreb ase or intent extra
 
             Intent newintent = new Intent(Details.this, ANote.class);
-            newintent.putExtra("notename", "about" + CompetitveEvents.name);
+            //aboutHospitalityManagement
+            newintent.putExtra("notename", "about" + i.getExtras().getString("name"));
             startActivity(newintent);
         }
 

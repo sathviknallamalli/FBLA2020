@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="com.example.sathv.ohsfbla.oly.example.sathv.ohsfbla.Settings">
+    tools:context="olyapps.sathv.fbla2020.Settings">
 
     <TextView
         android:id="@+id/textView43"
@@ -38,27 +38,19 @@
         android:layout_marginStart="11dp"
         android:layout_marginTop="16dp"
         android:ems="10"
+        android:enabled="false"
         android:gravity="top"
         android:hint="f"
         android:inputType="textPersonName" />
 
-    <EditText
-        android:id="@+id/company"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/f"
-        android:layout_below="@+id/f"
-        android:ems="10"
-        android:gravity="top"
-        android:hint="Company"
-        android:inputType="textPersonName" />
+
 
     <EditText
         android:id="@+id/position"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/company"
-        android:layout_below="@+id/company"
+        android:layout_alignStart="@+id/f"
+        android:layout_below="@+id/f"
         android:ems="10"
         android:gravity="top"
         android:hint="Position"
@@ -71,6 +63,7 @@
         android:layout_alignBaseline="@+id/f"
         android:layout_alignBottom="@+id/f"
         android:layout_marginStart="14dp"
+        android:enabled="false"
         android:layout_toEndOf="@+id/f"
         android:ems="10"
         android:gravity="top"

@@ -37,7 +37,7 @@ import me.fahmisdk6.avatarview.AvatarView;
 
 public class Settings extends AppCompatActivity {
 
-    EditText f, l, position, company, email, phone, website;
+    EditText f, l, position, email, phone, website;
 
     ImageButton camclick;
     private static final int GALLEY_REQUEST = 1;
@@ -58,7 +58,9 @@ public class Settings extends AppCompatActivity {
 
     Button logout;
 
+    String role;
 
+    String chapterid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,12 +75,25 @@ public class Settings extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mstorageimage = FirebaseStorage.getInstance().getReference().child("Profile_Images");
 
-        dr = FirebaseDatabase.getInstance().getReference().child("Users");
+        SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        chapterid = spchap.getString("chapterID", "tempid");
+
+        SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        role = sp.getString(getString(R.string.role), "role");
+
+        String childid="";
+        if(role.equals("Adviser")){
+            childid = "Advisers";
+        }else if(role.equals("Member")||role.equals("Officer")){
+            childid = "Users";
+        }
+
+        dr = FirebaseDatabase.getInstance().getReference().
+                child("Chapters").child(chapterid).child(childid).child(mAuth.getCurrentUser().getUid());
         f = findViewById(R.id.f);
         l = findViewById(R.id.l);
         position = findViewById(R.id.position);
 
-        SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
         f.setText(sp.getString(getString(R.string.fname), "fname"));
         l.setText(sp.getString(getString(R.string.lname), "lname"));
         position.setText(sp.getString(getString(R.string.role), "role"));
@@ -112,8 +127,7 @@ public class Settings extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Users");
-                dr.child(mAuth.getCurrentUser().getUid()).child("online").setValue(ServerValue.TIMESTAMP);
+                dr.child("online").setValue(ServerValue.TIMESTAMP);
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(Settings.this, LockScreen.class));
                 finish();
@@ -125,8 +139,6 @@ public class Settings extends AppCompatActivity {
         email.setEnabled(false);
         email.setKeyListener(null);
 
-
-        company = findViewById(R.id.company);
         phone = findViewById(R.id.phone);
         website = findViewById(R.id.web);
 
@@ -183,22 +195,18 @@ public class Settings extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             final Uri downloadUri = task.getResult();
 
-                            dr.child(userid).child("profpic").setValue(downloadUri.toString());
+                            dr.child("profpic").setValue(downloadUri.toString());
                         }
                     }
                 });
             }
 
-            DatabaseReference allchanges = FirebaseDatabase.getInstance().getReference().child("Users").child(userid);
-            allchanges.child("fname").setValue(f.getText().toString());
-            allchanges.child("lname").setValue(l.getText().toString());
-            allchanges.child("company").setValue(company.getText().toString());
-            allchanges.child("phone").setValue(phone.getText().toString());
-            allchanges.child("website").setValue(website.getText().toString());
+            dr.child("fname").setValue(f.getText().toString());
+            dr.child("lname").setValue(l.getText().toString());
 
             Intent i = new Intent(Settings.this, Profile.class);
             startActivity(i);
-            overridePendingTransition(R.anim.slide_in_out, R.anim.slide_in_up);
+            //overridePendingTransition(R.anim.slide_in_out, R.anim.slide_in_up);
 
         }
         return super.onOptionsItemSelected(item);

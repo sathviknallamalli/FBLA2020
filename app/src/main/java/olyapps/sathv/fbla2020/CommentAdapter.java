@@ -1,6 +1,7 @@
 package olyapps.sathv.fbla2020;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,9 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
         this.arraylistcheckedbooks = arraylistcheckedbooks;
     }
 
+    String chapid;
+    String role;
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final Comment checkedBook = arraylistcheckedbooks.get(position);
@@ -43,6 +47,11 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
             convertView = LayoutInflater.from(context).inflate(R.layout.comment_single_layout, parent, false);
         }
 
+        SharedPreferences sp = convertView.getContext().getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        role = sp.getString(convertView.getContext().getString(R.string.role), "role");
+
+        SharedPreferences spchap = convertView.getContext().getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        chapid = spchap.getString("chapterID", "tempid");
         //retrieve the fields
         final CircleImageView civ = convertView.findViewById(R.id.comment_profile_layout);
         final TextView textView = (TextView) convertView.findViewById(R.id.comment_text_layout);
@@ -63,10 +72,21 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
         });
 
 
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
-        databaseReference.child(checkedBook.uid).addValueEventListener(new ValueEventListener() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Chapters")
+                .child(chapid);
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot ds) {
+
+                DataSnapshot dataSnapshot = null;
+                if(ds.child("Advisers").hasChild(checkedBook.uid)){
+                    dataSnapshot = ds.child("Advisers").child(checkedBook.uid);
+                }else if(ds.child("Users").hasChild(checkedBook.uid)){
+                    dataSnapshot = ds.child("Users").child(checkedBook.uid);
+                }
+
+
                 if (dataSnapshot.child("profpic").getValue().toString().equals("nocustomimage")) {
                     Glide.with(context).load(R.drawable.defaultimg).into(civ);
                 } else {
@@ -79,6 +99,8 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 
                 String sourceString = "<b>" + full + "</b> " + "  " + checkedBook.text;
                 textView.setText(Html.fromHtml(sourceString));
+
+              
 
             }
 

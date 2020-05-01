@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.sathv.ohsfbla.oly.example.sathv.ohsfbla.OtherProfile">
+    tools:context= "olyapps.sathv.fbla2020.OtherProfile">
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
 
         android:id="@+id/other_profile_viewpager"
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="@+id/tabs"
         app:layout_constraintVertical_bias="1.0">
 
-    </android.support.v4.view.ViewPager>
+    </androidx.viewpager.widget.ViewPager>
 
     <ImageView
         android:id="@+id/imageView19"
@@ -110,7 +110,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/other_profile_name"
-        android:text="Advisor"
+        android:text="Adviser"
         android:textAlignment="center"
         android:textColor="@color/gray"
         android:textSize="18sp"
@@ -121,7 +121,7 @@
         app:layout_constraintTop_toBottomOf="@+id/vs"
         app:layout_constraintVertical_bias="0.0" />
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/other_profile_tabs"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -140,5 +140,5 @@
         app:tabSelectedTextColor="@color/actionbarcolor"
         app:tabTextColor="@color/actionbarcolor">
 
-    </android.support.design.widget.TabLayout>
+    </com.google.android.material.tabs.TabLayout>
 </RelativeLayout>

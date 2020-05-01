@@ -66,6 +66,9 @@ public class PersonAdapter extends ArrayAdapter<Person> {
         final String yourusername = sp.getString(context.getString(R.string.fname), "fname") + " " + sp.getString(context.getString(R.string.lname), "fname");
         String nospace = sp.getString(context.getString(R.string.fname), "fname") + sp.getString(context.getString(R.string.lname), "lname");
 
+        SharedPreferences spchap = context.getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        String chapterid = spchap.getString("chapterID", "tempid");
+
         String fn = checkedBook.personname;
 
         int delete = spacechar(fn);
@@ -77,7 +80,8 @@ public class PersonAdapter extends ArrayAdapter<Person> {
         }
 
         if (checkedBook.isGroup.equals("false")) {
-            DatabaseReference getlast = FirebaseDatabase.getInstance().getReference().child("ChatMessages")
+            DatabaseReference getlast = FirebaseDatabase.getInstance().getReference().
+                    child("Chapters").child(chapterid).child("ChatMessages")
                     .child(fn + "_" + nospace);
 
             Query lastQuery = getlast.orderByKey().limitToLast(1);
@@ -114,7 +118,8 @@ public class PersonAdapter extends ArrayAdapter<Person> {
             String groupname = checkedBook.personname;
             groupname = groupname.replace("Group: ", "");
 
-            DatabaseReference getlast = FirebaseDatabase.getInstance().getReference().child("ChatMessages")
+            DatabaseReference getlast = FirebaseDatabase.getInstance().getReference().
+                    child("Chapters").child(chapterid).child("ChatMessages")
                     .child("Groups").child(groupname).child("messages");
 
             Query lastQuery = getlast.orderByKey().limitToLast(1);
@@ -166,7 +171,8 @@ public class PersonAdapter extends ArrayAdapter<Person> {
 
             if (!checkedBook.uid.equals("nocustomimage")) {
 
-                DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Users").child(checkedBook.uid);
+                DatabaseReference dr = FirebaseDatabase.getInstance().getReference().
+                        child("Chapters").child(chapterid).child("Users").child(checkedBook.uid);
                 dr.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

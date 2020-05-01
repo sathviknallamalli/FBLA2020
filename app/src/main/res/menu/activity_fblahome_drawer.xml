@@ -5,61 +5,113 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_board"
-            android:icon="@drawable/board"
-            android:title="Activity Stream" />
-        <item
-            android:id="@+id/nav_calendar"
-            android:icon="@drawable/event"
-            android:title="Calendar" />
-        <item
-            android:id="@+id/nav_info"
-            android:icon="@drawable/info"
-            android:title="General Info" />
-        <item
-            android:id="@+id/nav_welcome"
-            android:icon="@drawable/business"
-            android:title="FBLA-PBL" />
-        <item
-            android:id="@+id/nav_chapmembers"
-            android:icon="@drawable/ic_message"
-            android:title="Messaging"
-            app:actionViewClass="android.widget.TextView" />
-        <item
-            android:id="@+id/nav_myfbla"
-            android:icon="@drawable/person"
-            android:title="MyFBLA"
-            app:actionViewClass="android.widget.TextView"/>
-        <item
-            android:id="@+id/nav_events"
-            android:icon="@drawable/ic_playlist"
-            android:title="Competitive Events" />
-        <item
-            android:id="@+id/nav_events"
-            android:icon="@drawable/ic_playlist"
-            android:title="Join FBLA" />
-        <item
-            android:id="@+id/nav_notes"
-            android:icon="@drawable/notes"
-            android:title="Chapter Meetings" />
-        <item
-            android:id="@+id/nav_officers"
-            android:icon="@drawable/ic_office"
-            android:title="Chapter Officers" />
-        <item
-            android:id="@+id/nav_social"
-            android:icon="@drawable/ic_world"
-            android:title="Social Media" />
-        <item
-            android:id="@+id/nav_social"
-            android:icon="@drawable/ic_world"
-            android:title="Contact" />
-        <item
-            android:id="@+id/nav_privacy"
-            android:icon="@drawable/privacyicon"
-            android:title="Privacy Policy" />
+
+        <item android:title="Home">
+            <menu>
+                <item
+                    android:id="@+id/nav_board"
+                    android:icon="@drawable/board"
+                    android:title="Activity Stream" />
+                <item
+                    android:id="@+id/nav_calendar"
+                    android:icon="@drawable/event"
+                    android:title="Calendar" />
+                <item
+                    android:id="@+id/nav_chapmembers"
+                    android:icon="@drawable/ic_message"
+                    android:title="Messaging"
+                    app:actionViewClass="android.widget.TextView" />
+            </menu>
+        </item>
+
+        <item android:title="Events">
+            <menu>
+                <item
+                    android:id="@+id/nav_myfbla"
+                    android:icon="@drawable/person"
+                    android:title="MyFBLA"
+                    app:actionViewClass="android.widget.TextView" />
+                <item
+                    android:id="@+id/nav_events"
+                    android:icon="@drawable/ic_playlist"
+                    android:title="Competitive Events" />
+                <item
+                    android:id="@+id/nav_choose"
+                    android:icon="@drawable/ic_choose"
+                    android:title="Choosing your FBLA Event" />
+            </menu>
+        </item>
+
+        <item android:title="About">
+            <menu>
+                <item
+                    android:id="@+id/nav_welcome"
+                    android:icon="@drawable/business"
+                    android:title="About FBLA-PBL" />
+                <item
+                    android:id="@+id/nav_info"
+                    android:icon="@drawable/info"
+                    android:title="General Info" />
+
+            </menu>
+        </item>
+
+        <item android:title="Your Chapter">
+            <menu>
+                <item
+                    android:id="@+id/nav_officers"
+                    android:icon="@drawable/ic_office"
+                    android:title="Chapter Officer Team" />
+                <item
+                    android:id="@+id/nav_notes"
+                    android:icon="@drawable/notes"
+                    android:title="Check-In to Meeting" />
+                <item
+                    android:id="@+id/nav_join"
+                    android:icon="@drawable/ic_join"
+                    android:title="Join FBLA" />
+                <item
+                    android:id="@+id/nav_social"
+                    android:icon="@drawable/ic_world"
+                    android:title="Social Media" />
+            </menu>
+        </item>
+
+        <item android:title="Tools">
+            <menu>
+                <item
+                    android:id="@+id/nav_notifs"
+                    android:icon="@drawable/ic_notif"
+                    android:title="Notifications" />
+                <item
+                    android:id="@+id/nav_stats"
+                    android:icon="@drawable/ic_stat"
+                    android:title="Chapter Stats" />
+                <item
+                    android:id="@+id/nav_chapsetts"
+                    android:icon="@drawable/gear"
+                    android:title="Settings" />
+            </menu>
+        </item>
+
+    <item android:title="Reach Out">
+        <menu>
+            <item
+                android:id="@+id/nav_contact"
+                android:icon="@drawable/ic_contact"
+                android:title="Contact" />
+            <item
+                android:id="@+id/nav_faq"
+                android:icon="@drawable/ic_faq"
+                android:title="FAQ" />
+            <item
+                android:id="@+id/nav_privacy"
+                android:icon="@drawable/privacyicon"
+                android:title="Privacy Policy" />
+        </menu>
+    </item>
+
     </group>
 
 
-</menu>
+    </menu>

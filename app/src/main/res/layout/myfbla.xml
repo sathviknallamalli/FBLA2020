@@ -7,19 +7,15 @@
     android:orientation="vertical"
     android:paddingTop="0dp">
 
-    <ImageView
-        android:id="@+id/imageView17"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/whiteimg" />
-
     <ListView
         android:id="@+id/teameventslist"
         android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/currentevents"
         android:layout_alignTop="@+id/currentevents"
+        android:layout_marginBottom="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
         android:layout_toEndOf="@+id/currentevents"
         android:paddingLeft="5dp"
         android:scrollbars="vertical"
@@ -45,7 +41,7 @@
 
     <ListView
         android:id="@+id/currentevents"
-        android:layout_width="140dp"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/addevent"
@@ -87,8 +83,9 @@
         android:id="@+id/fullname5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/open"
-        android:layout_below="@+id/open"
+        android:layout_alignStart="@+id/viewSwitcher"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@+id/viewSwitcher"
         android:layout_marginTop="17dp"
         android:text="Your Events"
         android:textColor="@android:color/black"
@@ -101,49 +98,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.404" />
 
-    <Button
-        android:id="@+id/approvals"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/regitseredevents"
-        android:layout_alignBottom="@+id/regitseredevents"
-        android:layout_marginStart="13dp"
-        android:layout_toEndOf="@+id/regitseredevents"
-        android:background="@color/st"
-        android:paddingEnd="10dp"
-        android:paddingStart="10dp"
-        android:text="Approvals"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@color/colorPrimary" />
-
-    <Button
-        android:id="@+id/regitseredevents"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/open"
-        android:layout_alignBottom="@+id/open"
-        android:layout_marginStart="16dp"
-        android:layout_toEndOf="@+id/open"
-        android:background="@color/st"
-        android:paddingEnd="10dp"
-        android:paddingStart="10dp"
-        android:text="Save Events to File"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@color/colorPrimary" />
-
-    <Button
-        android:id="@+id/open"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/viewSwitcher"
-        android:layout_below="@+id/linearLayout3"
-        android:layout_marginTop="15dp"
-        android:background="@color/st"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:text="Open File"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@color/colorPrimary" />
 
     <ListView
         android:id="@+id/onlyifuradvisor"
@@ -152,7 +106,7 @@
         android:layout_alignTop="@+id/addteamevent"
         android:paddingEnd="0dp"
         android:paddingStart="0dp"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
     <ViewSwitcher
         android:id="@+id/viewSwitcher"
@@ -215,23 +169,7 @@
             android:layout_toEndOf="@+id/addevent"
             android:text="John Smith"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.3" />
-
-        <TextView
-            android:id="@+id/fullgradyear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/fullname"
-            android:layout_below="@+id/fullname"
-            android:layout_marginTop="5dp"
-            android:text="2021"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -250,7 +188,7 @@
             android:layout_toEndOf="@+id/viewSwitcher"
             android:text="snallamalli25@yahoo.com"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -269,12 +207,26 @@
             android:layout_toEndOf="@+id/viewSwitcher"
             android:text="un"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.3" />
+
+        <Button
+            android:id="@+id/approvals"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/st"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Event approvals"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/colorPrimary"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -6,25 +6,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="com.example.sathv.ohsfbla.oly.example.sathv.ohsfbla.FBLAHome">
+    tools:context="olyapps.sathv.fbla2020.FBLAHome">
 
 
     <Button
         android:id="@+id/cancel"
-        android:layout_width="175dp"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/customnotes"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:background="@drawable/button_outlineblue"
         android:text="Cancel"
         android:textColor="@color/white" />
 
     <Button
         android:id="@+id/addevent"
-        android:layout_width="175dp"
+        android:layout_width="wrap_content"
+        android:layout_alignTop="@id/cancel"
+        android:layout_below="@id/customnotes"
         android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
         android:background="@drawable/button_outlineblue"
         android:text="Add"
         android:textColor="@color/white" />
@@ -35,10 +38,9 @@
         android:drawableLeft="@drawable/title"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/cancel"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="Title"
         android:inputType="textPersonName|textCapSentences" />
@@ -76,7 +78,7 @@
         android:layout_alignStart="@+id/title"
         android:layout_below="@+id/title"
         android:layout_marginLeft="46dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="17dp"
         android:text="All day"
         android:textSize="18sp" />
@@ -124,7 +126,6 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/startdate"
         android:layout_alignBottom="@+id/startdate"
-        android:layout_alignEnd="@+id/switch1"
         android:layout_marginStart="13dp"
         android:layout_toEndOf="@id/startdate"
         android:text="8:00 AM"
@@ -162,8 +163,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/enddate"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="27dp"
         android:text="TextView"
         android:textColor="@color/black"
@@ -176,7 +177,7 @@
         android:layout_alignStart="@+id/uremail"
         android:layout_below="@+id/uremail"
         android:layout_marginLeft="46dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="22dp" />
 
     <EditText
@@ -185,7 +186,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/imageView15"
         android:layout_below="@+id/imageView15"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="24dp"
         android:drawableLeft="@drawable/notes"
         android:ems="10"

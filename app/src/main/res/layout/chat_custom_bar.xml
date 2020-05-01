@@ -75,9 +75,10 @@
 
     <ImageButton
         android:id="@+id/viewmembercustom"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_alignTop="@+id/leavegroup"
+        android:layout_width="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@+id/custom_bar_title"
         android:layout_marginEnd="10dp"
         android:layout_toStartOf="@+id/leavegroup"
         android:background="@color/trans"
@@ -87,9 +88,9 @@
 
     <ImageButton
         android:id="@+id/leavegroup"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_alignTop="@+id/am"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@+id/viewmembercustom"
         android:layout_marginEnd="10dp"
         android:layout_toStartOf="@+id/am"
         android:background="@color/trans"
@@ -99,11 +100,11 @@
 
     <ImageButton
         android:id="@+id/am"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/custom_bar_title"
-        android:layout_marginRight="10dp"
+        android:layout_alignTop="@+id/viewmembercustom"
+        android:layout_marginRight="15dp"
         android:layout_marginTop="0dp"
         android:background="@color/trans"
         android:scaleType="centerCrop"
@@ -114,7 +115,8 @@
         android:id="@+id/custom_online"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_alignBottom="@+id/custom_bar_title"
+        android:layout_marginTop="5dp"
+        android:layout_alignTop="@id/custom_bar_title"
         android:layout_marginLeft="10dp"
         android:layout_toEndOf="@+id/custom_bar_title"
         app:srcCompat="@drawable/onlineicon" />

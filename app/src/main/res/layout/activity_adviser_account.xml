@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/creategradient"
+    android:background="@drawable/splashgrad"
     tools:context="olyapps.sathv.fbla2020.AdviserAccount"
     android:layout_height="wrap_content">
 
@@ -23,6 +23,7 @@
             android:layout_marginRight="8dp"
             android:paddingBottom="5dp"
             android:paddingTop="10dp"
+            android:textColor="@color/white"
             android:text="Create Adviser Account"
             android:textAlignment="center"
             android:textSize="25sp"
@@ -42,7 +43,7 @@
             android:layout_marginTop="8dp"
             android:text="Next step is to create an adviser account to associate with this chapter"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -157,6 +158,24 @@
             android:textColorHint="@android:color/white"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/textView47"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Choose profile picture. Not required"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            tools:text="Choose profile picture. Not required" />
+
         <ImageView
             android:id="@+id/adviserprofpic"
             android:layout_width="match_parent"
@@ -177,9 +196,10 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/button_outline"
+            android:background="@drawable/input_background"
             android:text="Create Account"
             android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/actionbarcolor"
             android:textSize="18sp" />
 
         <ProgressBar
@@ -188,6 +208,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

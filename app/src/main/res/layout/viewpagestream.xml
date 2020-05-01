@@ -27,7 +27,7 @@
         android:layout_marginBottom="13dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text="Click below to get and follow the latest updates at Oly High's FBLA"
+        android:text="Click below to get and follow the latest updates at your chapter's FBLA"
         android:textAlignment="center"
         android:textColor="@color/gray"
         android:textSize="18sp" />

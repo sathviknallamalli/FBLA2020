@@ -27,7 +27,7 @@
         android:layout_marginBottom="13dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text="Click below to view all your messages with chapter members, officers, and advisors"
+        android:text="Click below to view all your messages with chapter members, officers, and advisers"
         android:textAlignment="center"
         android:textColor="@color/gray"
         android:textSize="18sp" />

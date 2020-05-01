@@ -37,7 +37,7 @@
         android:background="@color/actionbarcolor"
         android:paddingEnd="35dp"
         android:paddingStart="30dp"
-        android:text="Talk to advisor"
+        android:text="Talk to adviser"
         android:textColor="@color/white" />
 
     <ListView
@@ -57,7 +57,7 @@
 
     </ListView>
 
-    <android.support.v7.widget.SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/sb"
         android:theme="@style/AppSearchView"
         android:layout_width="wrap_content"

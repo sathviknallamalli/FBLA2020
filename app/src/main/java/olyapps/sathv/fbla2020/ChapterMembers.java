@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ public class ChapterMembers extends Fragment {
     }*/
 
     View view;
+    String chapterid;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,26 +57,58 @@ public class ChapterMembers extends Fragment {
 
         //  getActivity().setTitle("ChapInbox");
 
-        final String[] fns = new String[fnstemp.length + 1];
-        final String[] lns = new String[lnstemp.length + 1];
-        final String[] uids = new String[uidstemp.length + 1];
-
         SharedPreferences sp = view.getContext().getSharedPreferences("userinfo", Context.MODE_PRIVATE);
         final String fname = sp.getString(getString(R.string.fname), "fname");
         final String lname = sp.getString(getString(R.string.lname), "lname");
         String uname = sp.getString(getString(R.string.uid), "uid");
+        String role = sp.getString(getString(R.string.role), "role");
 
-        for (int i = 0; i < fns.length; i++) {
-            if (i == fns.length - 1) {
-                fns[i] = fname;
-                lns[i] = lname;
-                uids[i] = uname;
-            } else {
+
+        final String[] fns;
+        final String[] lns;
+        final String[] uids;
+
+        if (role.equals("Adviser")) {
+            fns = new String[fnstemp.length];
+            lns = new String[lnstemp.length];
+            uids = new String[uidstemp.length];
+
+        } else {
+            fns = new String[fnstemp.length + 1];
+            lns = new String[lnstemp.length + 1];
+            uids = new String[uidstemp.length + 1];
+
+        }
+
+        SharedPreferences spchap = view.getContext().getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        chapterid = spchap.getString("chapterID", "tempid");
+
+        if (role.equals("Adviser")) {
+            for (int i = 0; i < fns.length; i++) {
+
                 fns[i] = fnstemp[i];
                 lns[i] = lnstemp[i];
                 uids[i] = uidstemp[i];
+
+            }
+        } else {
+            for (int i = 0; i < fns.length; i++) {
+                if (i == fns.length - 1) {
+                    fns[i] = fname;
+                    lns[i] = lname;
+                    uids[i] = uname;
+                }else{
+                    fns[i] = fnstemp[i];
+                    lns[i] = lnstemp[i];
+                    uids[i] = uidstemp[i];
+                }
+
+
             }
         }
+
+
+//uids normal
 
         String[] fullnames = new String[fns.length];
 
@@ -84,12 +118,16 @@ public class ChapterMembers extends Fragment {
 
         for (int i = 0; i < fns.length; i++) {
             fullnames[i] = fns[i] + " " + lns[i];
+
         }
 
         fullnames = sortItems(fullnames, uids);
+        for (int i = 0; i < uids.length; i++) {
+            Log.d("DARBAR", "array" + uids[i]);
+        }
         final String[] finalFullnames = fullnames;
 
-        DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Users");
+        DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapterid).child("Users");
         dr.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -103,12 +141,15 @@ public class ChapterMembers extends Fragment {
                             String uid =
                                     snapshot.child("uid").getValue().toString();
                             uids[i] = uid;
+                            if (finalFullnames[i].equals(fname + " " + lname)) {
+                                finalFullnames[i] = "(You) " + finalFullnames[i];
+                            }
                             memebers.add(new Person(finalFullnames[i], "chap", uid));
                         }
                     }
 
                 }
-                adapter = new PersonAdapter(view.getContext(), R.layout.perperson, memebers);
+                adapter = new PersonAdapter(getActivity().getApplicationContext(), R.layout.perperson, memebers);
                 chapmembers.setAdapter(adapter);
             }
 
@@ -122,13 +163,14 @@ public class ChapterMembers extends Fragment {
         chapmembers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, final int position, long id) {
-                final CharSequence options[] = new CharSequence[]{"Open profile", "Send message"};
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setTitle("Select option");
-                builder.setItems(options, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (!finalFullnames[position].equals(fname + " " + lname)) {
+                if (!finalFullnames[position].equals("(You) " + fname + " " + lname)) {
+                    final CharSequence options[] = new CharSequence[]{"Open profile", "Send message"};
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                    builder.setTitle("Select option");
+                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
                             if (options[which].equals("Send message")) {
 
                                 String str = finalFullnames[position];
@@ -139,8 +181,8 @@ public class ChapterMembers extends Fragment {
                                 UserDetails.chatuid = uids[position];
                                 UserDetails.fullname = finalFullnames[position];
 
-                                Members.isgroupcreated = false;
-                                Members.isthisagroup = false;
+                                MessagesInbox.isgroupcreated = false;
+                                MessagesInbox.isthisagroup = false;
 
                                 Intent i = new Intent(view.getContext(), ChatActivity.class);
                                 startActivity(i);
@@ -150,6 +192,8 @@ public class ChapterMembers extends Fragment {
                                 fm.executePendingTransactions();
                             } else if (options[which].equals("Open profile")) {
                                 Intent i = new Intent(view.getContext(), OtherProfile.class);
+                                Log.d("DARBAR", position + " rgrg" + uids[position] + "\n");
+
                                 i.putExtra("uid", uids[position]);
                                 i.putExtra("name", finalFullnames[position]);
                                 startActivity(i);
@@ -158,20 +202,18 @@ public class ChapterMembers extends Fragment {
                                 fm.beginTransaction().addToBackStack(ChapterMembers.class.getName()).commit();
                                 fm.executePendingTransactions();
 
-
                             }
                         }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.show();
+                }
 
-
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
             }
         });
 

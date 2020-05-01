@@ -14,6 +14,8 @@ public class RatingSheet extends AppCompatActivity {
 
     WebView webView;
 
+    Intent i;
+    String origname;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,8 +26,10 @@ public class RatingSheet extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        i = getIntent();
 
-        String name = CompetitveEvents.name;
+        String name = i.getExtras().getString("name");
+        origname = i.getExtras().getString("name");
 
         if (name.equals("E-business")) {
             name = "E-Business";
@@ -35,22 +39,22 @@ public class RatingSheet extends AppCompatActivity {
 
         String url = "http://docs.google.com/gview?embedded=true&url=" + "http://www.fbla-pbl.org/media/" + withhyphens + "-FBLA-Rating-Sheet.pdf";
 
-        if (CompetitveEvents.type.equals("Interview")) {
+        if (i.getExtras().getString("type").equals("Interview")) {
             url = "http://docs.google.com/gview?embedded=true&url=" + "http://www.fbla-pbl.org/media/" + withhyphens + "-FBLA-Rating-Sheets.pdf";
         }
 
-        if (CompetitveEvents.name.equals("Sports & Entertainment Management")) {
+        if (i.getExtras().getString("name").equals("Sports & Entertainment Management")) {
             url = "http://docs.google.com/gview?embedded=true&url=" + "http://www.fbla-pbl.org/media/" + "Sports-Entertainment-Management" + "-FBLA-Rating-Sheet.pdf";
         }
 
-        if (CompetitveEvents.name.equals("Computer Game & Simulation Programming")) {
+        if (i.getExtras().getString("name").equals("Computer Game & Simulation Programming")) {
             url = "http://docs.google.com/gview?embedded=true&url=" + "http://www.fbla-pbl.org/media/" + "Computer-Game-and-Simulation-Programming" + "-FBLA-Rating-Sheet.pdf";
         }
 
-        if (CompetitveEvents.name.equals("Banking & Financial Systems")) {
+        if (i.getExtras().getString("name").equals("Banking & Financial Systems")) {
             url = "http://docs.google.com/gview?embedded=true&url=" + "http://www.fbla-pbl.org/media/" + "Banking-Financial-Systems" + "-FBLA-Rating-Sheet.pdf";
         }
-        if (CompetitveEvents.name.equals("Coding & Programming")) {
+        if (i.getExtras().getString("name").equals("Coding & Programming")) {
             url = "http://docs.google.com/gview?embedded=true&url=" + "http://www.fbla-pbl.org/media/" + "Coding-and-Programming" + "-FBLA-Rating-Sheet.pdf";
         }
 
@@ -73,10 +77,20 @@ public class RatingSheet extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Intent newintent = new Intent(RatingSheet.this, Details.class);
+
+            getFragmentManager().popBackStackImmediate();
+            overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+            finish();
+
+           /*
+            i=getIntent();
+           Intent newintent = new Intent(RatingSheet.this, Details.class);
+            newintent.putExtra("name",origname);
+            newintent.putExtra("type", i.getExtras().getString("type"));
+            newintent.putExtra("category", i.getExtras().getString("category"));
             startActivity(newintent);
             finish();
-            overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+            overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);*/
         }
         return super.onOptionsItemSelected(item);
     }

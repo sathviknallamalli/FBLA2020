@@ -20,7 +20,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_fblahome"
-        app:itemBackground="@color/white"
+        app:itemBackground="@color/trans"
         app:itemIconTint="@color/actionbarcolor"
         app:itemTextColor="@color/black"
         app:menu="@menu/activity_fblahome_drawer" />

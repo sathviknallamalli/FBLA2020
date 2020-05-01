@@ -49,6 +49,8 @@ public class PopupActivity extends AppCompatActivity {
 
     EditText title, notes;
 
+    String chapid;
+
     ImageButton backbutton;
 
     @Override
@@ -56,11 +58,16 @@ public class PopupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.popup);
 
+        SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        chapid = spchap.getString("chapterID", "tempid");
+
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //go back to CALENDAR
+                getFragmentManager().popBackStackImmediate();
+                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                finish();
             }
         });
 
@@ -149,11 +156,11 @@ public class PopupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (TextUtils.isEmpty(title.getText().toString())) {
                     Toast.makeText(PopupActivity.this, "Event needs title", Toast.LENGTH_SHORT).show();
-                }else if (title.getText().toString().contains("SEPERATOR")) {
+                } else if (title.getText().toString().contains("SEPERATOR")) {
                     Toast.makeText(PopupActivity.this, "Invalid title name", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    if(allday[0]==false){
+                    if (allday[0] == false) {
                         String startdatestr = startdate.getText().toString();
                         startdatestr = startdatestr.replaceAll("\\d", "");
                         startdatestr = startdatestr.replaceAll("\\s+", "");
@@ -161,7 +168,8 @@ public class PopupActivity extends AppCompatActivity {
 
                         String titles = title.getText().toString();
 
-                        DatabaseReference addtime = FirebaseDatabase.getInstance().getReference().child("CalendarEvents").
+                        DatabaseReference addtime = FirebaseDatabase.getInstance().getReference().
+                                child("Chapters").child(chapid).child("CalendarEvents").
                                 child(startdatestr);
                         addtime.child(titles).child("StartDate").setValue(startdate.getText().toString());
                         addtime.child(titles).child("EndDate").setValue(enddate.getText().toString());
@@ -169,7 +177,7 @@ public class PopupActivity extends AppCompatActivity {
                         addtime.child(titles).child("EndTime").setValue(endttime.getText().toString());
                         addtime.child(titles).child("Name").setValue(titles);
                         addtime.child(titles).child("Email").setValue(uremail.getText().toString());
-                    }else{
+                    } else {
                         String startdatestr = startdate.getText().toString();
                         startdatestr = startdatestr.replaceAll("\\d", "");
                         startdatestr = startdatestr.replaceAll("\\s+", "");
@@ -177,7 +185,8 @@ public class PopupActivity extends AppCompatActivity {
 
                         String titles = title.getText().toString();
 
-                        DatabaseReference addtime = FirebaseDatabase.getInstance().getReference().child("CalendarEvents").
+                        DatabaseReference addtime = FirebaseDatabase.getInstance().getReference().
+                                child("Chapters").child(chapid).child("CalendarEvents").
                                 child(startdatestr);
                         addtime.child(titles).child("StartDate").setValue("none");
                         addtime.child(titles).child("EndDate").setValue("none");
@@ -195,11 +204,15 @@ public class PopupActivity extends AppCompatActivity {
 
                 if (!TextUtils.isEmpty(notes.getText().toString())) {
 
+
                     String startdatestr = startdate.getText().toString();
                     startdatestr = startdatestr.replaceAll("\\d", "");
+                    startdatestr = startdatestr.replaceAll("\\s+", "");
+                    startdatestr = startdatestr.replaceAll(",", "");
 
-                    DatabaseReference addtime = FirebaseDatabase.getInstance().getReference().child("CalendarEvents")
-                            .child(startdatestr);
+                    DatabaseReference addtime = FirebaseDatabase.getInstance().getReference().
+                            child("Chapters").child(chapid).child("CalendarEvents").
+                            child(startdatestr);
 
 
                     String titles = title.getText().toString();
@@ -215,7 +228,7 @@ public class PopupActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String notename = intent.getExtras().getString("taginfo");
-       String titletext = intent.getExtras().getString("eventname");
+        String titletext = intent.getExtras().getString("eventname");
         String monthname = intent.getExtras().getString("monthname");
         String allornot = intent.getExtras().getString("alldayornot");
 
@@ -237,15 +250,16 @@ public class PopupActivity extends AppCompatActivity {
 
             title.setText(titletext);
 
-            if(allornot.equals("ALLDAY")){
+            if (allornot.equals("ALLDAY")) {
                 aSwitch.setChecked(true);
                 aSwitch.setEnabled(false);
 
                 startdate.setVisibility(View.INVISIBLE);
                 enddate.setVisibility(View.INVISIBLE);
 
-                DatabaseReference calinfo = FirebaseDatabase.getInstance().getReference().child("CalendarEvents")
-                        .child(monthname).child(titletext);
+                DatabaseReference calinfo = FirebaseDatabase.getInstance().getReference().
+                        child("Chapters").child(chapid).child("CalendarEvents").
+                        child(monthname).child(titletext);
 
                 calinfo.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -259,7 +273,7 @@ public class PopupActivity extends AppCompatActivity {
                         String uremaailstr = dataSnapshot.child("Email").getValue().toString();
                         uremail.setText(uremaailstr);
 
-                        if(dataSnapshot.child("Notes").exists()){
+                        if (dataSnapshot.child("Notes").exists()) {
                             String notestr = dataSnapshot.child("Notes").getValue().toString();
                             notes.setText(notestr);
 
@@ -277,13 +291,14 @@ public class PopupActivity extends AppCompatActivity {
                 });
 
 
-            }else{
+            } else {
                 aSwitch.setChecked(false);
                 aSwitch.setEnabled(false);
 
 
-                DatabaseReference calinfo = FirebaseDatabase.getInstance().getReference().child("CalendarEvents")
-                        .child(monthname).child(titletext);
+                DatabaseReference calinfo = FirebaseDatabase.getInstance().getReference().
+                        child("Chapters").child(chapid).child("CalendarEvents").
+                        child(monthname).child(titletext);
 
                 calinfo.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -303,13 +318,13 @@ public class PopupActivity extends AppCompatActivity {
                         String uremaailstr = dataSnapshot.child("Email").getValue().toString();
                         uremail.setText(uremaailstr);
 
-                        if(dataSnapshot.child("Notes").exists()){
+                        if (dataSnapshot.child("Notes").exists()) {
                             String notestr = dataSnapshot.child("Notes").getValue().toString();
                             notes.setText(notestr);
 
                             notes.setEnabled(false);
                             notes.setKeyListener(null);
-                        }else{
+                        } else {
                             notes.setVisibility(View.INVISIBLE);
                         }
 

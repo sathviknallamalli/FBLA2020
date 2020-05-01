@@ -9,4 +9,5 @@ public class UserDetails {
     static String chatuid = "";
     static String fullname = "";
     static String opuid = "";
+    static boolean isadviser = false;
 }

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="com.example.sathv.ohsfbla.oly.example.sathv.ohsfbla.FBLAHome">
+    tools:context="olyapps.sathv.fbla2020.FBLAHome">
 
 
     <ImageView
@@ -53,7 +53,7 @@
         app:compactCalendarTextColor="@color/black"
         app:compactCalendarTextSize="12sp" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -62,7 +62,6 @@
         android:layout_marginBottom="10dp"
         android:layout_marginRight="16dp"
         android:clickable="true"
-        app:backgroundTint="@color/fui_bgPhone"
         app:srcCompat="@drawable/ic_add" />
 
     <TextView

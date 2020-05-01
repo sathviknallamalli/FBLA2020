@@ -5,7 +5,7 @@
     android:id="@+id/cl"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.sathv.ohsfbla.oly.example.sathv.ohsfbla.ANote">
+    tools:context="olyapps.sathv.fbla2020.ANote">
 
     <EditText
         android:id="@+id/notetext"

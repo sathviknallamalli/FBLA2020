@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="olyapps.sathv.fbla2020.FBLAHome">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context="olyapps.sathv.fbla2020.FBLAHome">
+
+        <EditText
+            android:id="@+id/chapidsett"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/textView49"
+            android:layout_below="@+id/textView49"
+            android:layout_marginTop="6dp"
+            android:enabled="false"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="chapiterid"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/stateconfdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/imageView26"
+            android:layout_below="@+id/imageView25"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/imageView26"
+            android:layout_toRightOf="@+id/imageView26"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="state conference date"
+            android:inputType="date" />
+
+        <EditText
+            android:id="@+id/winterconfdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/stateconfdate"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/imageView26"
+            android:layout_toRightOf="@+id/imageView26"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="winter conference date"
+            android:inputType="date" />
+
+        <EditText
+            android:id="@+id/fallconfdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/winterconfdate"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/imageView26"
+            android:layout_toRightOf="@+id/imageView26"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="fall conference date"
+            android:inputType="date" />
+
+        <EditText
+            android:id="@+id/instaurl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/iv10"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/iv10"
+            android:layout_toRightOf="@+id/iv10"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="insta url"
+            android:inputType="textUri" />
+
+        <EditText
+            android:id="@+id/fburl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/instaurl"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/iv10"
+            android:layout_toRightOf="@+id/iv10"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="fburl"
+            android:inputType="textUri" />
+
+        <EditText
+            android:id="@+id/chapnamesett"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/chapidsett"
+            android:layout_below="@+id/chapidsett"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="chapter name"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/chapzipsett"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/chapnamesett"
+            android:layout_below="@+id/chapnamesett"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="chapzip"
+            android:inputType="number" />
+
+
+        <EditText
+            android:id="@+id/memberset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/imageView10"
+            android:layout_below="@+id/imageView2"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/imageView26"
+            android:layout_toRightOf="@+id/imageView26"
+            android:ems="10"
+            android:enabled="false"
+            android:gravity="top"
+            android:hint="member key"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/officerset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/memberset"
+            android:layout_marginLeft="9dp"
+            android:layout_marginStart="9dp"
+            android:layout_toEndOf="@+id/imageView26"
+            android:layout_toRightOf="@+id/imageView26"
+            android:ems="10"
+            android:enabled="false"
+            android:gravity="top"
+            android:hint="officer key"
+            android:inputType="textPersonName" />
+
+
+        <EditText
+            android:id="@+id/adviserset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/officerset"
+            android:layout_marginLeft="9dp"
+            android:layout_marginStart="9dp"
+            android:layout_toEndOf="@+id/imageView26"
+            android:layout_toRightOf="@+id/imageView26"
+            android:ems="10"
+            android:enabled="false"
+            android:gravity="top"
+            android:hint="adviser key"
+            android:inputType="textPersonName" />
+
+        <ImageButton
+            android:id="@+id/camclicksett"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignStart="@+id/chaplogosett"
+            android:layout_below="@+id/chaplogosett"
+            android:background="@color/trans"
+            android:scaleType="centerCrop"
+            android:tag="ChapterLogo"
+            app:srcCompat="@drawable/circcam" />
+
+        <ImageView
+            android:id="@+id/imageView26"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignStart="@+id/imageView25"
+            android:layout_below="@+id/imageView25"
+            android:layout_marginTop="15dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/calendarcirc" />
+
+
+
+        <ImageView
+            android:id="@+id/chaplogosett"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_alignTop="@+id/chapidsett"
+            android:layout_marginStart="34dp"
+            android:tag="ChapterLogo"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/chapnamesett"
+            android:src="@drawable/bear"></ImageView>
+
+        <Spinner
+            android:id="@+id/chapstatesett"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/chapnamesett"
+            android:layout_below="@+id/chapzipsett"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="chapzip"
+            android:inputType="number"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp" />
+
+        <TextView
+            android:id="@+id/textView49"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="25dp"
+            android:text="CHAPTER INFO"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/imageView25"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView49"
+            android:layout_below="@+id/chapstatesett"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            android:text="CONFERENCE DATES"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:srcCompat="@drawable/line" />
+
+        <TextView
+            android:id="@+id/tv26"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/fallconfdate"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            android:text="SOCIAL MEDIA"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:srcCompat="@drawable/line" />
+
+        <ImageView
+            android:id="@+id/iv10"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignStart="@+id/imageView25"
+            android:layout_below="@id/tv26"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="15dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/instacirc" />
+
+        <ImageView
+            android:id="@+id/iv11"
+            android:layout_width="40dp"
+            android:layout_alignTop="@id/fburl"
+            android:layout_height="40dp"
+            android:layout_alignStart="@+id/imageView25"
+            android:layout_marginStart="0dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/fbcirc" />
+
+
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignStart="@+id/imageView25"
+            android:layout_below="@id/imageView2"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="15dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/keycirc" />
+
+        <TextView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/fburl"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            android:text="ROLE KEYS"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:srcCompat="@drawable/line" />
+
+        <TextView
+            android:id="@+id/textView52"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/adviserset"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="10dp"
+            android:text="ROLE PERMISSIONS"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView17"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignStart="@+id/imageView25"
+            android:layout_below="@id/textView52"
+            android:layout_marginTop="15dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/permissioncirc" />
+
+        <LinearLayout
+            android:id="@+id/oficlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignStart="@+id/imageView17"
+            android:layout_alignTop="@id/imageView17"
+            android:layout_below="@id/textView52"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView69"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="33dp"
+                android:text="Officer can..."
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/op0sett"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:text="Post on chapter activity stream"
+                android:textSize="15sp" />
+
+            <CheckBox
+                android:id="@+id/op1sett"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:text="Schedule events in the chapter calendar"
+                android:textSize="15sp" />
+
+            <CheckBox
+                android:id="@+id/op2sett"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:text="Send out notifications"
+                android:textSize="15sp" />
+
+            <CheckBox
+                android:id="@+id/op3sett"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:text="Manage meeting attendance"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/advilay"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignStart="@+id/imageView17"
+           android:layout_below="@id/oficlay"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView79"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="33dp"
+                android:text="Adviser can..."
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/op4sett"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:text="Post on chapter activity stream"
+                android:textSize="15sp" />
+
+            <CheckBox
+                android:id="@+id/op5sett"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:text="Schedule events in the chapter calendar"
+                android:textSize="15sp" />
+
+            <CheckBox
+                android:id="@+id/op6sett"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:text="Send out notifications"
+                android:textSize="15sp" />
+
+            <CheckBox
+                android:id="@+id/op7sett"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:text="Manage meeting attendance"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView71"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/advilay"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="10dp"
+            android:text="CHAPTER OFFICERS AND ADVISERS"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView29"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignStart="@+id/imageView25"
+            android:layout_below="@id/textView71"
+            android:layout_marginTop="15dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/officercirc" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:id="@+id/presll"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/imageView29"
+            android:layout_below="@id/textView71"
+            android:layout_marginLeft="32dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/presidentnamesett"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="President"
+                android:inputType="textPersonName"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/presimgsett"
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:tag="PresidentImg"
+                app:srcCompat="@drawable/primaryuser" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/vicell"
+            android:layout_alignStart="@id/imageView29"
+            android:layout_below="@id/presll"
+            android:layout_marginLeft="32dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/vpnamesett"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Vice president"
+                android:inputType="textPersonName"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/vpimgsett"
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:tag="VicePresidentImg"
+                app:srcCompat="@drawable/primaryuser" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/secll"
+            android:layout_alignStart="@id/imageView29"
+            android:layout_below="@id/vicell"
+            android:layout_marginLeft="32dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/secnamesett"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Secretary"
+                android:inputType="textPersonName" />
+
+            <ImageView
+                android:id="@+id/secimgsett"
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:tag="SecretaryImg"
+                app:srcCompat="@drawable/primaryuser" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/tresll"
+            android:layout_alignStart="@id/imageView29"
+            android:layout_below="@id/secll"
+            android:layout_marginLeft="32dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/tresnamesett"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Treasurer"
+                android:inputType="textPersonName" />
+
+            <ImageView
+                android:id="@+id/tresimgsett"
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:tag="TreasurerImg"
+                app:srcCompat="@drawable/primaryuser" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:id="@+id/publl"
+            android:layout_alignStart="@id/imageView29"
+            android:layout_below="@id/tresll"
+            android:layout_marginLeft="32dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/pubrelnamesett"
+                android:layout_width="wrap_content"
+                android:textSize="14sp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Public relations"
+                android:inputType="textPersonName" />
+
+            <ImageView
+                android:id="@+id/pubrelimgsett"
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:tag="PublicRelationsImg"
+                app:srcCompat="@drawable/primaryuser" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/advill"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="14sp"
+            android:layout_alignStart="@id/imageView29"
+            android:layout_below="@id/publl"
+            android:layout_marginBottom="32dp"
+            android:layout_marginLeft="32dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/advisernamesett"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:textSize="14sp"
+                android:hint="Adviser"
+                android:inputType="textPersonName" />
+
+            <ImageView
+                android:id="@+id/advimgsett"
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:tag="AdviserImg"
+                app:srcCompat="@drawable/primaryuser" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</ScrollView>

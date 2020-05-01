@@ -123,7 +123,7 @@ public class Setup extends AppCompatActivity {
 
                         DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid).child("Users");
                         dr.child(mAuth.getCurrentUser().getUid()).child("username").setValue(username.getText().toString());
-                        dr.child(mAuth.getCurrentUser().getUid()).child("gradyear").setValue(grad.getSelectedItem().toString());
+                        dr.child(mAuth.getCurrentUser().getUid()).child("graduationyear").setValue(grad.getSelectedItem().toString());
 
                         SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();
@@ -220,6 +220,12 @@ public class Setup extends AppCompatActivity {
                         SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();
                         editor.putString(getString(R.string.profpic), downloadUri.toString());
+                        editor.apply();
+
+                        SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+                        final SharedPreferences.Editor editorchap = spchap.edit();
+                        editorchap.putString("chapterID", chapid);
+                        editorchap.apply();
 
                         Intent intent = new Intent(getApplicationContext(), Instructions.class);
                         startActivity(intent);

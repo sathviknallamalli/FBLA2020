@@ -1,14 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="oly.apps.sathv.chaptermanage.FBLAHome">
+    android:background="@color/white"
+    tools:context="olyapps.sathv.fbla2020.FBLAHome">
 
-    <WebView
-        android:id="@+id/pripol"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</RelativeLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageView22"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/mylogo" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_toRightOf="@id/imageView22"
+                android:text="MyFBLA is developed by Olympia High School FBLA Members in Olympia, Washington."
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imageView22"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text="It was developed with the purpose to centralize all chapter information into one platform and transform paper records to online.\n\nMyFBLA lets any chapter signup and have their own dashboard, members can join a chapter with specific roles. All chapter data is secured and saved. Features include: networking platform, activity stream, in-built messaging, notifications, event dashboard/workspace, event signup/approvals, chapter information.\n\nEverything is customizable and the same dashboard can be used across multiple years with capabilties to update chapter information. "
+            android:textColor="@color/black" />
+
+        <WebView
+            android:id="@+id/pripol"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/textView8"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+</ScrollView>

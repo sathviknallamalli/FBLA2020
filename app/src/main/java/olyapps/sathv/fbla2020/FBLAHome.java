@@ -15,15 +15,17 @@ import android.widget.ViewSwitcher;
 
 import com.bumptech.glide.Glide;
 import com.firebase.client.Firebase;
-import com.firebase.client.ServerValue;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -40,10 +42,12 @@ public class FBLAHome extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
 
-    TextView fullname, emailandgrade;
+    TextView fullname, emailandgrade, chapterheader;
     private FirebaseAuth mAuth;
     NavigationView navigationView;
-    TextView notifs;
+    String role;
+
+    boolean canuser = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +58,6 @@ public class FBLAHome extends AppCompatActivity
         setSupportActionBar(toolbar);
         mAuth = FirebaseAuth.getInstance();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -69,94 +72,101 @@ public class FBLAHome extends AppCompatActivity
         fragmentTransaction.commit();
 
 
-        // startActivity(new Intent(FBLAHome.this, MainActivity.class));
-
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         final View v = navigationView.getHeaderView(0);
 
-        fullname = v.findViewById(R.id.fullname);
-        emailandgrade = v.findViewById(R.id.emailandgrade);
+        fullname = v.findViewById(R.id.fullnameheader);
+        emailandgrade = v.findViewById(R.id.emailheader);
+        chapterheader = v.findViewById(R.id.chapterheader);
+
+        SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editorchap = spchap.edit();
+
+        final String chapid = spchap.getString("chapterID", "tempid");
 
         SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
-
         fullname.setText(sp.getString(getString(R.string.fname), "fname") + " " + sp.getString(getString(R.string.lname), "lname"));
         final String fnf = fullname.getText().toString();
         emailandgrade.setText(sp.getString(getString(R.string.email), "email"));
 
-        String uri = sp.getString(getString(R.string.profpic), "profpic");
+        role = sp.getString(getString(R.string.role), "temprole");
 
-        final ViewSwitcher switcher = v.findViewById(R.id.viewSwitcher);
+        FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                chapterheader.setText(dataSnapshot.child("Setup").child("ChapterName").getValue().toString() + " FBLA");
 
-        CircleImageView civ = v.findViewById(R.id.profile_image);
-        AvatarView userinitials = v.findViewById(R.id.profpicnav);
+                editorchap.putString("chaptername",dataSnapshot.child("Setup").child("ChapterName").getValue().toString());
+                editorchap.putString("chapterlogo",dataSnapshot.child("Images").child("ChapterLogo").getValue().toString());
+                editorchap.apply();
 
-        if (uri.equals("nocustomimage")) {
-            userinitials.bind(fullname.getText().toString(), null);
-        } else {
-            switcher.showNext();
-            Glide.with(getApplicationContext()).load(uri).into(civ);
 
+                final ViewSwitcher switcher = v.findViewById(R.id.viewSwitcher);
+
+                CircleImageView civ = v.findViewById(R.id.profile_image);
+                AvatarView userinitials = v.findViewById(R.id.profpicnav);
+
+                String child="";
+                if(role.equals("Officer")||role.equals("Member")){
+                    child="Users";
+                }else if(role.equals("Adviser")){
+                    child="Advisers";
+                }
+
+                if (dataSnapshot.child(child).child(mAuth.getCurrentUser().getUid()).child("profpic").getValue().toString().equals("nocustomimage")) {
+                    userinitials.bind(fullname.getText().toString(), null);
+                } else {
+                    switcher.showNext();
+                    Glide.with(getApplicationContext()).load(dataSnapshot.child(child).child(mAuth.getCurrentUser().getUid()).child("profpic").getValue().toString()).into(civ);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+        if(role.equals("Adviser")){
+            Menu menu = navigationView.getMenu();
+            MenuItem nav_myfbla = menu.findItem(R.id.nav_myfbla);
+            nav_myfbla.setTitle("Approvals");
         }
 
-        DatabaseReference getnumber = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        DatabaseReference getnumber = FirebaseDatabase.getInstance().getReference().child("Chapters")
+                .child(chapid);
         getnumber.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                long val = dataSnapshot.getChildrenCount();
+                long val = dataSnapshot.child("Users").getChildrenCount();
                 long total = val;
-
 
                 TextView chaptertotal = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().
                         findItem(R.id.nav_chapmembers));
                 initializeCountDrawer(chaptertotal, "Member Count: " + total);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        DatabaseReference geteventcount = FirebaseDatabase.getInstance().getReference().child("UserEvents")
-                .child(sp.getString(getString(R.string.fname), "") + " " + sp.getString(getString(R.string.lname), ""));
-        geteventcount.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                final long[] total = {0};
-                if(dataSnapshot.exists()){
-                    long val = dataSnapshot.getChildrenCount();
-                    total[0] = val;
+                if(role.equals("Adviser")||role.equals("Officer")) {
+                    if (dataSnapshot.child("Roles").child(role + "Rules").getValue().toString().contains("3")) {
+                        canuser = true;
+                        Menu menu = navigationView.getMenu();
+                        MenuItem nav_meetings = menu.findItem(R.id.nav_notes);
+                        nav_meetings.setTitle("Manage Meetings");
+                    }
                 }
 
-
-                DatabaseReference teameventcount = FirebaseDatabase.getInstance().getReference().child("TeamEvents");
-                teameventcount.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            for (DataSnapshot snapshot:dataSnapshot.getChildren()) {
-                                for (DataSnapshot sp:snapshot.getChildren()) {
-                                    if(sp.getValue().toString().contains(fnf)){
-                                        total[0]++;
-                                    }
-                                }
-                            }
-
-                        }
-                        TextView chaptertotal = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().
-                                findItem(R.id.nav_myfbla));
-                        initializeCountDrawer(chaptertotal, "Event Count: " + total[0]);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
+                if(!canuser){
+                    Menu menu = navigationView.getMenu();
+                    MenuItem nav_meetings = menu.findItem(R.id.nav_notes);
+                    nav_meetings.setTitle("Check In to Meeting");
+                }
 
             }
 
@@ -166,17 +176,38 @@ public class FBLAHome extends AppCompatActivity
             }
         });
 
-        /*Intent notifyIntent = getIntent();
-        if (notifyIntent != null && notifyIntent.getExtras() != null) {
-            String extras = getIntent().getExtras().get("KEY").toString();
-            if (extras != null && extras.equals("YOUR VAL")) {
-                Notifications fragmentt = new Notifications();
-                android.app.FragmentTransaction fragmentTransactiont = getFragmentManager().beginTransaction();
-                fragmentTransactiont.replace(R.id.frameLayout, fragmentt);
-                fragmentTransactiont.commit();
+        //update adviser devicetokens
+        if(role.equals("Adviser")) {
+            final DatabaseReference devtokens = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid).child("Advisers");
+            devtokens.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    ArrayList<String> adevtoks = collectemails((Map<String, Object>) dataSnapshot.getValue(), "device_token");
+                    String add = "";
+                    for (int i = 0; i < adevtoks.size(); i++) {
+                        add += adevtoks.get(i) + ",";
+                    }
+                    devtokens.child("device_tokens").setValue(add);
 
-            }
-        }*/
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            Menu nav_Menu = navigationView.getMenu();
+            nav_Menu.findItem(R.id.nav_chapsetts).setVisible(true);
+
+            nav_Menu.findItem(R.id.nav_contact).setVisible(false);
+
+            nav_Menu.findItem(R.id.nav_join).setVisible(false);
+        }else{
+            Menu nav_Menu = navigationView.getMenu();
+            nav_Menu.findItem(R.id.nav_chapsetts).setVisible(false);
+        }
+
 
         Intent notifyIntent = getIntent();
         if (notifyIntent != null && notifyIntent.getExtras() != null) {
@@ -211,10 +242,10 @@ public class FBLAHome extends AppCompatActivity
                 Intent myIntent = new Intent(Intent.ACTION_SEND);
                 myIntent.setType("text/plain");
                 String sharebody = "Your body here";
-                String sharesub = "Hey there! Download the OHS FBLA app to get updates on our club information";
+                String sharesub = "Hey there! Download the FBLA Chapters to get updates on our chapter.";
                 myIntent.putExtra(Intent.EXTRA_SUBJECT, sharesub);
                 myIntent.putExtra(Intent.EXTRA_TEXT, sharebody);
-                startActivity(Intent.createChooser(myIntent, "Share OHSFBLA using"));
+                startActivity(Intent.createChooser(myIntent, "Share FBLA Chapters using"));
             }
         });
 
@@ -222,7 +253,22 @@ public class FBLAHome extends AppCompatActivity
         lgtbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Users");
+
+                SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+                final String chapid = spchap.getString("chapterID", "tempid");
+
+                SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+                final String role = sp.getString(getString(R.string.role), "role");
+                DatabaseReference dr;
+
+                if(role.equals("Adviser")){
+                    dr = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid)
+                            .child("Advisers");
+                }else{
+                    dr = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid)
+                            .child("Users");
+                }
+
                 dr.child(mAuth.getCurrentUser().getUid()).child("online").setValue(ServerValue.TIMESTAMP);
 
                 FirebaseAuth.getInstance().signOut();
@@ -276,56 +322,93 @@ public class FBLAHome extends AppCompatActivity
         int id = item.getItemId();
        FragmentManager fragmentManager = getSupportFragmentManager();
 
+       android.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
 
-        android.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-
-        if (id == R.id.nav_info) {
+       if (id == R.id.nav_board) {
+            startActivity(new Intent(FBLAHome.this, MainActivity.class));
+        } else if (id == R.id.nav_calendar) {
+           fragmentTransaction.replace(R.id.frameLayout, new Calendar());
+           fragmentTransaction.commit();
+       }else if (id == R.id.nav_info) {
             fragmentTransaction.replace(R.id.frameLayout, new GeneralInfo());
-            fragmentTransaction.commit();
-        } else if (id == R.id.nav_events) {
-            fragmentTransaction.replace(R.id.frameLayout, new CompetitveEvents());
             fragmentTransaction.commit();
         } else if (id == R.id.nav_welcome) {
             fragmentTransaction.replace(R.id.frameLayout, new Welcome());
             fragmentTransaction.commit();
-        } /*else if (id == R.id.nav_budget) {
-            startActivity(new Intent(FBLAHome.this, Head.class));
-        } */else if (id == R.id.nav_social) {
-            fragmentTransaction.replace(R.id.frameLayout, new SocialMedia());
-            fragmentTransaction.commit();
-        } else if (id == R.id.nav_myfbla) {
-           // fragmentTransaction.replace(R.id.frameLayout, new MyFBLA());
-            fragmentTransaction.commit();
-        } else if (id == R.id.nav_notes) {
-            fragmentTransaction.replace(R.id.frameLayout, new MeetingNotes());
-            fragmentTransaction.commit();
-        } else if (id == R.id.nav_officers) {
-            fragmentTransaction.replace(R.id.frameLayout, new Officers());
-            fragmentTransaction.commit();
-        } else if (id == R.id.nav_board) {
-            startActivity(new Intent(FBLAHome.this, MainActivity.class));
-        }  if (id == R.id.nav_chapmembers) {
+        } else if (id == R.id.nav_chapmembers) {
             fragmentManager.beginTransaction().replace(R.id.frameLayout, new ComboFragments()).
                     addToBackStack(null).commit();
-        } /* else if (id == R.id.nav_conf) {
-            fragmentTransaction.replace(R.id.frameLayout, new HowItWorks());
-            fragmentTransaction.commit();
-        } else if (id == R.id.nav_ourinfo) {
-            fragmentTransaction.replace(R.id.frameLayout, new OurInformation());
-            fragmentTransaction.commit();
+        } else if (id == R.id.nav_myfbla) {
 
-        }  else if (id == R.id.nav_calendar) {
-            fragmentTransaction.replace(R.id.frameLayout, new Calendar());
-            fragmentTransaction.commit();
-        }else if (id == R.id.nav_club) {
-            fragmentTransaction.replace(R.id.frameLayout, new Club());
-            fragmentTransaction.commit();
-        }*/else if (id == R.id.nav_privacy) {
-            fragmentTransaction.replace(R.id.frameLayout, new PrivacyPolicy());
-            fragmentTransaction.commit();
+            if(role.equals("Adviser")){
+                //aprovals page
+                startActivity(new Intent(FBLAHome.this, Approvals.class));
+            }else{
+                fragmentTransaction.replace(R.id.frameLayout, new MyFBLA());
+                fragmentTransaction.commit();
+            }
+
+       } else if (id == R.id.nav_events) {
+           fragmentTransaction.replace(R.id.frameLayout, new CompetitveEvents());
+           fragmentTransaction.commit();
+       }else if (id == R.id.nav_choose) {
+           fragmentTransaction.replace(R.id.frameLayout, new ChooseEvent());
+           fragmentTransaction.commit();
+       }else if (id == R.id.nav_stats) {
+           fragmentTransaction.replace(R.id.frameLayout, new Stats());
+           fragmentTransaction.commit();
+       }
+
+       else if (id == R.id.nav_join) {
+           fragmentTransaction.replace(R.id.frameLayout, new JoinFBLA());
+           fragmentTransaction.commit();
+       }
+       else if (id == R.id.nav_notes) {
+           if(canuser){
+               fragmentTransaction.replace(R.id.frameLayout, new StartMeeting());
+               fragmentTransaction.commit();
+           }else{
+               fragmentTransaction.replace(R.id.frameLayout, new CheckInMeeting());
+               fragmentTransaction.commit();
+           }
+
+       }
+
+       else if (id == R.id.nav_officers) {
+           fragmentTransaction.replace(R.id.frameLayout, new Officers());
+           fragmentTransaction.commit();
+       } else if (id == R.id.nav_social) {
+
+           fragmentManager.beginTransaction().replace(R.id.frameLayout, new SocialCombo()).
+                   addToBackStack(null).commit();
         }
+
+       else if (id == R.id.nav_notifs) {
+           fragmentTransaction.replace(R.id.frameLayout, new Notifications());
+           fragmentTransaction.commit();
+       }
+
+
+       else if (id == R.id.nav_chapsetts) {
+           startActivity(new Intent(FBLAHome.this, ChapterSettings.class));
+         //  fragmentTransaction.replace(R.id.frameLayout, new ChapterSettings());
+           //fragmentTransaction.commit();
+       }
+       else if (id == R.id.nav_faq) {
+           fragmentTransaction.replace(R.id.frameLayout, new FAQ());
+           fragmentTransaction.commit();
+       }
+       else if (id == R.id.nav_contact) {
+           //INCLUDE QA
+           fragmentTransaction.replace(R.id.frameLayout, new ContactUs());
+           fragmentTransaction.commit();
+       }
+       else if (id == R.id.nav_privacy) {
+           fragmentTransaction.replace(R.id.frameLayout, new PrivacyPolicy());
+           fragmentTransaction.commit();
+       }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -339,6 +422,23 @@ public class FBLAHome extends AppCompatActivity
         tv1.setText(text);
         tv1.setTextSize(12);
     }
+    private ArrayList<String> collectemails(Map<String, Object> users, String whatyouwant) {
+        ArrayList<String> information = new ArrayList<>();
+        //iterate through each user, ignoring their UID
+        for (Map.Entry<String, Object> entry : users.entrySet()) {
+            if(!entry.getKey().toString().equals("device_tokens")){
+                Map singleUser = (Map) entry.getValue();
+                //Get phone field and append to list
 
+                if (singleUser != null) {
+                    information.add((String) singleUser.get(whatyouwant));
+                }
+            }
+            //Get user map
+
+        }
+
+        return information;
+    }
 
 }

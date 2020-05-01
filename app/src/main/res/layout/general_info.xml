@@ -6,11 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="com.example.sathv.ohsfbla.oly.example.sathv.ohsfbla.FBLAHome">
+    tools:context="olyapps.sathv.fbla2020.FBLAHome">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
         android:layout_marginStart="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -21,7 +21,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginBottom="0dp"
             android:layout_marginEnd="0dp"
             android:layout_marginStart="0dp"
@@ -33,22 +33,31 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.046">
 
-            <Space
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/imageView5"
-                android:layout_width="350dp"
-                android:layout_height="134dp"
-                app:srcCompat="@drawable/opt" />
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="185dp"
+                    android:layout_height="134dp"
+                    app:srcCompat="@drawable/fblasmall" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="16dp" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/chapterlogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="134dp"
+                    android:background="@color/trans"
+                    android:src="@drawable/bear"
+                    app:civ_border_color="@color/colorPrimary"
+                    app:civ_border_width="5dp" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/chaptertitle"
+                android:layout_marginTop="25dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-smallcaps"
@@ -58,121 +67,73 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="31dp" />
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/line" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="18dp" />
-
             <TextView
                 android:id="@+id/textView39"
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:text="This years theme is..."
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimary"
                 android:textSize="30sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="18dp" />
-
             <ImageView
                 android:id="@+id/imageView23"
                 android:layout_width="match_parent"
-                android:layout_height="221dp"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/createleadinspire" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="18dp" />
-
-            <TextView
-                android:id="@+id/textView42"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="CREATE. LEAD. INSPIRE."
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="18dp" />
+                android:layout_height="212dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/themepic" />
 
             <TextView
                 android:id="@+id/textView12"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Conference Dates 2018-19"
+                android:text="Your Conference Dates 2019-20"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimary"
                 android:textSize="30sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="23dp" />
-
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/datestv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="National Leadership Conference:\n2019 NLC - San Antonio, Texas\nFBLA: June 29 - July 2\n\nState Business Leadership Conference:\nBellevue, WA\nApril 10 - 13, 2019\n\nFall Conference:\nNovember, 2018\n\nWinter Conference:\nFebruary, 2019"
+                android:layout_marginTop="15dp"
+                android:text="dates info"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="23dp" />
-
             <ImageView
                 android:id="@+id/imageView9"
+                android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/line" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="20dp" />
-
             <TextView
                 android:id="@+id/textView13"
+                android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="This is the official app for the 2018-19 FBLA year - Olympia High School. Get up to date information about our club and FLC, WLC, and SBLC. Check back for more information on dates"
+                android:text="This is the official app for your 2019-2020 FBLA Chapter. Get up to date information about your chapter and conferences. Check back for more infromation"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="19dp" />
-
             <TextView
                 android:id="@+id/textView14"
                 android:layout_width="match_parent"
+                android:layout_marginTop="15dp"
                 android:layout_height="wrap_content"
                 android:text="Dress Code"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimary"
                 android:textSize="24sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="11dp" />
-
             <TextView
                 android:id="@+id/textView15"
+                android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Make sure to follow all the dress codes in order to participate in your events and attend conferences. Click below to view the FBLA-PBL dress code"
@@ -180,20 +141,14 @@
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="11dp" />
-
             <WebView
                 android:id="@+id/dresscode"
+                android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
-                android:layout_height="445dp">
+                android:layout_height="445dp"
+                android:layout_marginBottom="20dp">
 
             </WebView>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="16dp" />
 
         </LinearLayout>
 

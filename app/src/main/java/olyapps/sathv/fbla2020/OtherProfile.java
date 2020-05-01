@@ -1,9 +1,12 @@
 package olyapps.sathv.fbla2020;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,6 +41,8 @@ public class OtherProfile extends AppCompatActivity {
     ViewSwitcher otherprofilevs;
     CircleImageView otherprofileciv;
     AvatarView otherprofileav;
+
+    String chapterid;
 
     ImageView imageview19;
 
@@ -81,8 +86,13 @@ public class OtherProfile extends AppCompatActivity {
         String uid = i.getStringExtra("uid");
         UserDetails.opuid = uid;
 
+        SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        chapterid = spchap.getString("chapterID", "tempid");
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
-                .child("Users").child(uid);
+                .child("Chapters").child(chapterid).child("Users").child(uid);
+        Log.d("DARBAR", uid+"ff");
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

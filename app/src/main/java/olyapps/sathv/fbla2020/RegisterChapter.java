@@ -1,6 +1,8 @@
 package olyapps.sathv.fbla2020;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -93,10 +95,16 @@ public class RegisterChapter extends AppCompatActivity {
                             } else {
 
 
-                                chapters.child(newid.getText().toString()).child("ID").setValue(newid.getText().toString());
-                                chapters.child(newid.getText().toString()).child("ChapterName").setValue(newchapter.getText().toString());
-                                chapters.child(newid.getText().toString()).child("Zip").setValue(newzip.getText().toString());
-                                chapters.child(newid.getText().toString()).child("State").setValue(listofstates.getSelectedItem().toString());
+                                chapters.child(newid.getText().toString()).child("Setup").child("ID").setValue(newid.getText().toString());
+                                chapters.child(newid.getText().toString()).child("Setup").child("ChapterName").setValue(newchapter.getText().toString());
+                                chapters.child(newid.getText().toString()).child("Setup").child("Zip").setValue(newzip.getText().toString());
+                                chapters.child(newid.getText().toString()).child("Setup").child("State").setValue(listofstates.getSelectedItem().toString());
+
+                                SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editorchap = spchap.edit();
+
+                                editorchap.putString("chapterID",newid.getText().toString());
+                                editorchap.apply();
 
                                 Intent intent = new Intent(getApplicationContext(), AdviserAccount.class);
                                 intent.putExtra("chapterid", newid.getText().toString());

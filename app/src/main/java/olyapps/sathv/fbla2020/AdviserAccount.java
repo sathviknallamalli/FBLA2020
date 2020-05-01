@@ -1,7 +1,9 @@
 package olyapps.sathv.fbla2020;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -163,6 +165,12 @@ public class AdviserAccount extends AppCompatActivity {
                                                             FirebaseUser user = mAuth.getCurrentUser();
                                                             updateUI(user);
 
+                                                            SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+                                                            SharedPreferences.Editor editorchap = spchap.edit();
+
+                                                            editorchap.putString("chapterID",id);
+                                                            editorchap.apply();
+
                                                             Intent intent = new Intent(getApplicationContext(), RolesStep.class);
                                                             intent.putExtra("chapterid", id);
                                                             intent.putExtra("adviseremail", adviseremail.getText().toString());
@@ -210,8 +218,9 @@ public class AdviserAccount extends AppCompatActivity {
         chapter.child("Advisers").child(user.getUid()).child("fname").setValue(adviserfn.getText().toString());
         chapter.child("Advisers").child(user.getUid()).child("lname").setValue(adviserln.getText().toString());
         chapter.child("Advisers").child(user.getUid()).child("email").setValue(adviseremail.getText().toString());
+        chapter.child("Advisers").child(user.getUid()).child("username").setValue(adviserun.getText().toString());
         chapter.child("Advisers").child(user.getUid()).child("password").setValue(adviserpd.getText().toString());
-
+        chapter.child("Advisers").child(user.getUid()).child("accounttype").setValue("LOCAL");
 
         final DatabaseReference devtokens = FirebaseDatabase.getInstance().getReference().child("Chapters").child(id).child("Advisers");
         devtokens.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -242,7 +251,7 @@ public class AdviserAccount extends AppCompatActivity {
                     }
                 });
 
-        final StorageReference filepath = mstorageimage.child(mImageuri.getLastPathSegment());
+
 
         user.sendEmailVerification()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -259,28 +268,34 @@ public class AdviserAccount extends AppCompatActivity {
                     }
                 });
 
-        Task<UploadTask.TaskSnapshot> uploadTask;
-        uploadTask = filepath.putFile(mImageuri);
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
+        if(mImageuri!=null){
+            final StorageReference filepath = mstorageimage.child(mImageuri.getLastPathSegment());
+            Task<UploadTask.TaskSnapshot> uploadTask;
+            uploadTask = filepath.putFile(mImageuri);
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
 
-                // Continue with the task to get the download URL
-                return filepath.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    final Uri downloadUri = task.getResult();
-
-                    chapter.child("Advisers").child(user.getUid()).child("profpic").setValue(downloadUri.toString());
+                    // Continue with the task to get the download URL
+                    return filepath.getDownloadUrl();
                 }
-            }
-        });
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        final Uri downloadUri = task.getResult();
+
+                        chapter.child("Advisers").child(user.getUid()).child("profpic").setValue(downloadUri.toString());
+                    }
+                }
+            });
+        }else{
+            chapter.child("Advisers").child(user.getUid()).child("profpic").setValue("nocustomimage");
+        }
+
 
     }
 
@@ -307,14 +322,15 @@ public class AdviserAccount extends AppCompatActivity {
         ArrayList<String> information = new ArrayList<>();
         //iterate through each user, ignoring their UID
         for (Map.Entry<String, Object> entry : users.entrySet()) {
+            if(!entry.getKey().toString().equals("device_tokens")){
+                Map singleUser = (Map) entry.getValue();
+                //Get phone field and append to list
 
-            //Get user map
-            Map singleUser = (Map) entry.getValue();
-            //Get phone field and append to list
-
-            if (singleUser != null) {
-                information.add((String) singleUser.get(whatyouwant));
+                if (singleUser != null) {
+                    information.add((String) singleUser.get(whatyouwant));
+                }
             }
+            //Get user map
 
         }
 

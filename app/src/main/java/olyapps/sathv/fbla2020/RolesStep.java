@@ -1,6 +1,8 @@
 package olyapps.sathv.fbla2020;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -90,9 +92,9 @@ public class RolesStep extends AppCompatActivity {
                 advisercode.setText("Adviser code: " + ac);
 
                 DatabaseReference codes = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid);
-                codes.child("MemberCode").setValue(mc);
-                codes.child("OfficerCode").setValue(oc);
-                codes.child("AdviserCode").setValue(ac);
+                codes.child("JoinCodes").child("MemberCode").setValue(mc);
+                codes.child("JoinCodes").child("OfficerCode").setValue(oc);
+                codes.child("JoinCodes").child("AdviserCode").setValue(ac);
 
                 String ocrules = "";
                 String acrules = "";
@@ -130,6 +132,12 @@ public class RolesStep extends AppCompatActivity {
                 Intent intent = getIntent();
                 String chapid = intent.getExtras().getString("chapterid");
 
+                SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editorchap = spchap.edit();
+
+                editorchap.putString("chapterID",chapid);
+                editorchap.apply();
+
                 Intent i = new Intent(getApplicationContext(), LastStep.class);
                 i.putExtra("chapterid", chapid);
                 startActivity(i);
@@ -154,7 +162,11 @@ public class RolesStep extends AppCompatActivity {
     }
 
     public void sendconfirmemail(String email, String mc, String oc, String ac) {
-        String subject = "Chapter Codes";
+        Intent intent = getIntent();
+        String chapid = intent.getExtras().getString("chapterid");
+
+
+        String subject = "Chapter Registration " + chapid;
         String message = "Below are the codes for each role in your chapter. Only share the proper ones to those members " +
                 "that need it.\n\nMember role: " + mc + "\nOfficer role: " + oc + "\nAdviser role: " + ac;
         SendMail sm = new SendMail(RolesStep.this, email, subject, message);

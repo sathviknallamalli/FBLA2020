@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/creategradient"
+    android:background="@drawable/splashgrad"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="55dp"
+            android:paddingLeft="50dp"
             android:paddingTop="30dp">
 
             <ImageView
@@ -32,17 +32,16 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/fblasmall" />
 
-            <ImageView
+
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/cchapterlogo"
-                android:layout_width="150dp"
+                android:layout_width="match_parent"
                 android:layout_height="82dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/imageView4"
-                android:layout_marginEnd="44dp"
-                android:layout_marginLeft="40dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/bear" />
+                android:background="@color/trans"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bear"
+                app:civ_border_color="@color/colorPrimary"
+                app:civ_border_width="5dp" />
         </LinearLayout>
 
         <com.google.android.gms.common.SignInButton
@@ -66,7 +65,7 @@
 
 
         <TextView
-            android:id="@+id/textView67"
+            android:id="@+id/ortv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -74,7 +73,7 @@
             android:layout_marginTop="20dp"
             android:text="OR, you can create a local account below"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -222,9 +221,10 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/button_outline"
+            android:background="@drawable/input_background"
             android:text="Create Account"
             android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/actionbarcolor"
             android:textSize="18sp" />
 
         <ProgressBar
@@ -233,6 +233,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

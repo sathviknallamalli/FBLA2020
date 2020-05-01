@@ -17,11 +17,14 @@ import android.widget.ViewSwitcher;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -58,6 +61,8 @@ public class Profile extends AppCompatActivity {
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
+    String role;
+    String chapterid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,20 +79,45 @@ public class Profile extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
         String firstnae = sp.getString(getString(R.string.fname), "fname");
         String lastname = sp.getString(getString(R.string.lname), "lname");
-        String pp = sp.getString(getString(R.string.profpic), "profpic");
 
-        String fn = firstnae + " " + lastname;
+        SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        chapterid = spchap.getString("chapterID", "tempid");
 
-        AvatarView av = findViewById(R.id.circlenav);
-        CircleImageView civ = findViewById(R.id.circleiv);
-        ViewSwitcher vs = findViewById(R.id.vs);
 
-        if(pp.equals("nocustomimage")){
-            av.bind(fn, null);
-        }else{
-            vs.showNext();
-            Glide.with(getApplicationContext()).load(pp).into(civ);
+        final String fn = firstnae + " " + lastname;
+
+        final AvatarView av = findViewById(R.id.circlenav);
+        final CircleImageView civ = findViewById(R.id.circleiv);
+        final ViewSwitcher vs = findViewById(R.id.vs);
+
+        role = sp.getString(getString(R.string.role), "role");
+
+        String child="";
+        if(role.equals("Adviser")){
+            child="Advisers";
+        }else if(role.equals("Officer") || role.equals("Member")){
+            child="Users";
         }
+        DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapterid)
+                .child(child).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        dr.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child("profpic").getValue().toString().equals("nocustomimage")){
+                        av.bind(fn, null);
+                }else{
+                    vs.showNext();
+                    Glide.with(getApplicationContext()).load(dataSnapshot.child("profpic").getValue().toString()).into(civ);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         menuname.setText(fn);
 
@@ -228,28 +258,5 @@ public class Profile extends AppCompatActivity {
         }
         return super.onCreateOptionsMenu(menu);
     }
-    private void processJson(JSONObject object) {
 
-        try {
-            JSONArray rows = object.getJSONArray("rows");
-
-            for (int r = 0; r < rows.length(); ++r) {
-                JSONObject row = rows.getJSONObject(r);
-                JSONArray columns = row.getJSONArray("c");
-
-                int position = columns.getJSONObject(0).getInt("v");
-                String name = columns.getJSONObject(1).getString("v");
-                int wins = columns.getJSONObject(2).getInt("v");
-                int draws = columns.getJSONObject(3).getInt("v");
-                int losses = columns.getJSONObject(4).getInt("v");
-                int points = columns.getJSONObject(5).getInt("v");
-
-
-            }
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 }

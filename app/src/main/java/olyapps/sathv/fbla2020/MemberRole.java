@@ -1,7 +1,10 @@
 package olyapps.sathv.fbla2020;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -55,6 +58,7 @@ public class MemberRole extends AppCompatActivity {
         roles.setSelection(0);
 
         keyentered = findViewById(R.id.rolekey);
+        keyentered.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
 
 
         create = findViewById(R.id.gotocreate);
@@ -65,8 +69,8 @@ public class MemberRole extends AppCompatActivity {
                 desiredrole = roles.getSelectedItem().toString();
                 boolean ismatch = false;
 
-                if (desiredrole.equals("Please select your role")) {
-                    Toast.makeText(MemberRole.this, "Select a valid role", Toast.LENGTH_SHORT).show();
+                if (desiredrole.equals("Please select your role") || keyentered.getText().toString().isEmpty()) {
+                    Toast.makeText(MemberRole.this, "Missing field(s)", Toast.LENGTH_SHORT).show();
                 } else {
 
                     if (desiredrole.equals("Member") && keyentered.getText().toString().equals(memberkey)) {
@@ -80,7 +84,11 @@ public class MemberRole extends AppCompatActivity {
                     if (ismatch) {
 
 
+                        SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editorchap = spchap.edit();
 
+                        editorchap.putString("chapterID",id);
+                        editorchap.apply();
 
                         Intent intent = new Intent(getApplicationContext(), CreateFBLAAccount.class);
                         intent.putExtra("role", desiredrole);

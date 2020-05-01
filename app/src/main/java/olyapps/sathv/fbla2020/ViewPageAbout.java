@@ -1,5 +1,7 @@
 package olyapps.sathv.fbla2020;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -29,6 +31,7 @@ public class ViewPageAbout extends Fragment {
     TextView aboutemail, aboutgradyear, aboutusername;
 
     View view;
+    String chapterid;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,12 +45,16 @@ public class ViewPageAbout extends Fragment {
 
         String uid = UserDetails.opuid;
 
-        DatabaseReference data = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+        SharedPreferences spchap = view.getContext().getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        chapterid = spchap.getString("chapterID", "tempid");
+
+        DatabaseReference data = FirebaseDatabase.getInstance().getReference().
+                child("Chapters").child(chapterid).child("Users").child(uid);
         data.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 aboutemail.setText(Html.fromHtml("<b>Contact email:</b> " +dataSnapshot.child("email").getValue().toString()));
-                aboutgradyear.setText(Html.fromHtml("<b>Graduation Year:</b> " + dataSnapshot.child("gradyear").getValue().toString()));
+                aboutgradyear.setText(Html.fromHtml("<b>Graduation Year:</b> " + dataSnapshot.child("graduationyear").getValue().toString()));
                 aboutusername.setText(Html.fromHtml("<b>Username:</b> " + dataSnapshot.child("username").getValue().toString()));
             }
 

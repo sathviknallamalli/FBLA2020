@@ -12,16 +12,14 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -32,18 +30,18 @@ import androidx.appcompat.app.AlertDialog;
 
 public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
     Context context;
-    ArrayList<CurrentEvent> arraylistcheckedbooks = null;
+    ArrayList<CurrentEvent> eventsarraylist = null;
 
     //checked books adapter contructor
-    public CurrentEventAdapter(Context context, int resource, ArrayList<CurrentEvent> arraylistcheckedbooks) {
-        super(context, resource, arraylistcheckedbooks);
+    public CurrentEventAdapter(Context context, int resource, ArrayList<CurrentEvent> eventsarraylist) {
+        super(context, resource, eventsarraylist);
         this.context = context;
-        this.arraylistcheckedbooks = arraylistcheckedbooks;
+        this.eventsarraylist = eventsarraylist;
     }
-
+String chapterid;
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final CurrentEvent checkedBook = arraylistcheckedbooks.get(position);
+        final CurrentEvent chosenevent = eventsarraylist.get(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.currenteventitem, parent, false);
@@ -52,11 +50,14 @@ public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
         //retrieve the fields
         final TextView bookTitle = (TextView) convertView.findViewById(R.id.rowname);
 
+        SharedPreferences spchap = convertView.getContext().getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        chapterid = spchap.getString("chapterID", "tempid");
+
         //lastmessage.setText();
 
         final int[] currentm = new int[1];
 
-        bookTitle.setText(checkedBook.rownameevent);
+        bookTitle.setText(chosenevent.rownameevent);
         Button remove = (Button) convertView.findViewById(R.id.delete);
         remove.setTag(position);
 
@@ -69,31 +70,18 @@ public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
         Button addmember = convertView.findViewById(R.id.addmember);
         addmember.setTag(position);
 
-
-        try {
-            if (new SimpleDateFormat("MM/dd/yyyy").parse("012/01/2018").before(new Date())) {
-
-                remove.setClickable(false);
-                remove.setEnabled(false);
-
-                addmember.setClickable(false);
-                addmember.setEnabled(false);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        if (checkedBook.isTeam) {
+        if (chosenevent.isTeam) {
             viewteam.setVisibility(View.VISIBLE);
             approvalstatus.setVisibility(View.VISIBLE);
             addmember.setVisibility(View.VISIBLE);
 
-            DatabaseReference prema = FirebaseDatabase.getInstance().getReference().child("TeamEvents")
-                    .child(checkedBook.rownameevent);
+            DatabaseReference prema = FirebaseDatabase.getInstance().getReference().
+                    child("Chapters").child(chapterid).child("TeamEvents")
+                    .child(chosenevent.rownameevent);
             prema.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.child("AdvisorStatus").getValue().toString().equals("0")) {
+                    if (dataSnapshot.child("AdviserStatus").getValue().toString().equals("0")) {
                         bookTitle.setTextColor(context.getResources().getColor(R.color.red));
                     } else {
 
@@ -132,11 +120,13 @@ public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
                 sp.getString(context.getString(R.string.role), "");
 
 
+
         approvalstatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference prema = FirebaseDatabase.getInstance().getReference().child("TeamEvents")
-                        .child(checkedBook.rownameevent);
+                DatabaseReference prema = FirebaseDatabase.getInstance().getReference().
+                        child("Chapters").child(chapterid).child("TeamEvents")
+                        .child(chosenevent.rownameevent);
 
                 prema.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -144,10 +134,10 @@ public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
                         ArrayList<String> statusvalues = new ArrayList<>();
                         ArrayList<String> vals = new ArrayList<>();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            if (snapshot.getKey().equals("AdvisorStatus")) {
+                            if (snapshot.getKey().equals("AdviserStatus")) {
 
                                 statusvalues.add(snapshot.getValue().toString());
-                                vals.add("Advisor");
+                                vals.add("Adviser");
                             } else {
                                 String val = snapshot.getValue().toString();
                                 String statuschar = val.charAt(val.length() - 1) + "";
@@ -165,10 +155,10 @@ public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
                             if (i == 0) {
                                 String temp = statusvalues.get(i).toString();
                                 if (temp.equals("0")) {
-                                    commas[i] = "Advisor: Not approved: " + temp;
+                                    commas[i] = "Adviser: Not approved: " + temp;
                                     colors[i] = new ColourItem(R.color.red);
                                 } else {
-                                    commas[i] = "Advisor: Approved: " + temp;
+                                    commas[i] = "Adviser: Approved: " + temp;
                                     colors[i] = new ColourItem(R.color.mygreen);
                                 }
                             }
@@ -232,15 +222,16 @@ public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
         viewteam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference prema = FirebaseDatabase.getInstance().getReference().child("TeamEvents")
-                        .child(checkedBook.rownameevent);
+                DatabaseReference prema = FirebaseDatabase.getInstance().getReference().
+                        child("Chapters").child(chapterid).child("TeamEvents")
+                        .child(chosenevent.rownameevent);
 
                 prema.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         ArrayList<String> teammembernames = new ArrayList<>();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            if (!snapshot.getKey().equals("AdvisorStatus")) {
+                            if (!snapshot.getKey().equals("AdviserStatus")) {
 
                                 teammembernames.add(snapshot.getValue().toString());
                             }
@@ -277,11 +268,11 @@ public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
             }
         });
 
-        if (checkedBook.isTeam) {
+        if (chosenevent.isTeam) {
             remove.setText("Drop out");
         }
 
-        if (role.equals("Advisor")) {
+        if (role.equals("Adviser")) {
             remove.setVisibility(View.INVISIBLE);
             addmember.setVisibility(View.INVISIBLE);
         }
@@ -289,8 +280,9 @@ public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
         addmember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final DatabaseReference memberc = FirebaseDatabase.getInstance().getReference().child("TeamEvents")
-                        .child(checkedBook.rownameevent);
+                final DatabaseReference memberc = FirebaseDatabase.getInstance().getReference().
+                        child("Chapters").child(chapterid).child("TeamEvents")
+                        .child(chosenevent.rownameevent);
                 memberc.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
@@ -339,16 +331,18 @@ public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
 
                                         final ArrayList<String> adviemail = new ArrayList<>();
                                         final ArrayList<String> dte = new ArrayList<>();
-                                        DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Users");
+                                        DatabaseReference dr = FirebaseDatabase.getInstance().getReference().
+                                                child("Chapters").child(chapterid);
                                         dr.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                 String dt="";
-                                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                for (DataSnapshot snapshot : dataSnapshot.child("Advisers").getChildren()) {
 
-                                                    if (snapshot.child("role").getValue().toString().equals("Advisor")) {
-                                                        adviemail.add(snapshot.child("email").getValue().toString());
-                                                    }
+
+                                                    adviemail.add(snapshot.child("email").getValue().toString());
+                                                }
+                                                for (DataSnapshot snapshot : dataSnapshot.child("Users").getChildren()) {
                                                     for (int i = 0; i < mNames.size(); i++) {
                                                         if((snapshot.child("fname").getValue().toString()
                                                                 + " " + snapshot.child("lname").getValue().toString())
@@ -369,9 +363,9 @@ public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
 
                                                 //SEMD EMAILA
                                                 for (int i = 0; i < adviemail.size(); i++) {
-                                                    String subject = "Member added to " + checkedBook.rownameevent;
+                                                    String subject = "Member added to " + chosenevent.rownameevent;
 
-                                                    String message = "A new member was added to the team event: " + checkedBook.rownameevent
+                                                    String message = "A new member was added to the team event: " + chosenevent.rownameevent
                                                             + "The name of the member is " + mAllnames.get( currentm[0]);
                                                     SendMail sm = new SendMail(context, adviemail.get(i), subject, message);
                                                     sm.execute();
@@ -381,7 +375,7 @@ public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
                                                 DatabaseReference newmember = FirebaseDatabase.getInstance().getReference().child("notificationAddMember");
                                                 newmember.child("0883f53d-00d1-429b-8de6-200e91c1942a")
                                                         .child("AddInfo").setValue(mAllnames.get( currentm[0]) + "SEPERATOR"
-                                                        + checkedBook.rownameevent + "SEPERATOR" + fullname + "SEPERATOR" + dte.toString());
+                                                        + chosenevent.rownameevent + "SEPERATOR" + fullname + "SEPERATOR" + dte.toString());
                                             }
 
                                             @Override
@@ -411,93 +405,47 @@ public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
         });
 
 
-
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final View finalConvertView = convertView;
         remove.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                final Integer index = (Integer) view.getTag();
-                arraylistcheckedbooks.remove(index);
-                notifyDataSetChanged();
+            public void onClick(final View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(finalConvertView.getContext());
+                builder.setCancelable(false);
+                builder.setTitle("Delete event");
+                builder.setMessage("Are you sure you want to delete this event. You cannot undo this action");
+                builder.setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                if (checkedBook.isTeam == false) {
-                    final DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("UserEvents")
-                            .child(fullname);
-                    dr.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            ArrayList<String> keys = new ArrayList<>();
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                keys.add(snapshot.getKey().toString());
-                            }
-                            String deletingkey = keys.get(index);
+                                final Integer index = (Integer) view.getTag();
+                                eventsarraylist.remove(index);
+                                notifyDataSetChanged();
 
-                            dr.child(deletingkey).removeValue();
-
-                            final Snackbar snackbar = Snackbar.make(finalConvertView, "Deleted. Reload page", Snackbar.LENGTH_LONG);
-                            snackbar.setAction("Dismiss", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    snackbar.dismiss();
-                                }
-                            });
-                            snackbar.show();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-                } else {
-                    final DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("TeamEvents")
-                            .child(checkedBook.rownameevent);
-
-                    dr.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            final ArrayList<String> fullnames = new ArrayList<>();
-                            final ArrayList<String> dts = new ArrayList<>();
-                            for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
-
-                                fullnames.add(snapshot.getValue().toString().substring(0, snapshot.getValue().toString().length()-1));
-
-                                if (snapshot.getValue().toString().substring(0, snapshot.getValue().toString().length() - 1).equals(fullname)) {
-                                    String key = snapshot.getKey();
-                                    dr.child(key).removeValue();
-
-                                    final Snackbar snackbar = Snackbar.make(finalConvertView, "Dropped. Reload page", Snackbar.LENGTH_LONG);
-                                    snackbar.setAction("Dismiss", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            snackbar.dismiss();
-                                        }
-                                    });
-                                    snackbar.show();
-
-
-                                    final ArrayList<String> adviemail = new ArrayList<>();
-                                    DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Users");
+                                if (chosenevent.isTeam == false) {
+                                    final DatabaseReference dr = FirebaseDatabase.getInstance().getReference().
+                                            child("Chapters").child(chapterid).child("UserEvents")
+                                            .child(mAuth.getCurrentUser().getUid());
                                     dr.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            ArrayList<String> keys = new ArrayList<>();
                                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                keys.add(snapshot.getKey().toString());
+                                            }
+                                            String deletingkey = keys.get(index);
 
-                                                if (snapshot.child("role").getValue().toString().equals("Advisor")) {
-                                                    adviemail.add(snapshot.child("email").getValue().toString());
+                                            dr.child(deletingkey).removeValue();
+
+                                            final Snackbar snackbar = Snackbar.make(finalConvertView, "Deleted. Reload page", Snackbar.LENGTH_LONG);
+                                            snackbar.setAction("Dismiss", new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    snackbar.dismiss();
                                                 }
-                                            }
-
-                                            for (int i = 0; i < adviemail.size(); i++) {
-                                                String subject = checkedBook.rownameevent + " Member Drop";
-
-                                                String message = "A member dropped out from " + checkedBook.rownameevent + " Event " +
-                                                        "\n" + fullname + " dropped. This email is an update of this team's status";
-                                                SendMail sm = new SendMail(context, adviemail.get(i), subject, message);
-                                                sm.execute();
-
-                                            }
+                                            });
+                                            snackbar.show();
                                         }
 
                                         @Override
@@ -505,26 +453,96 @@ public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
 
                                         }
                                     });
+                                } else {
+                                    final DatabaseReference dr = FirebaseDatabase.getInstance().getReference().
+                                            child("Chapters").child(chapterid).child("TeamEvents")
+                                            .child(chosenevent.rownameevent);
 
-
-                                    DatabaseReference dru = FirebaseDatabase.getInstance().getReference().child("Users");
-                                    dru.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    dr.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot uidsnap : dataSnapshot.getChildren()) {
-                                                for (int i = 0; i < fullnames.size(); i++) {
-                                                    if(fullnames.get(i).equals((uidsnap.child("fname").getValue().toString() + " " + uidsnap.child("lname").getValue().toString()))
-                                                            && !fullnames.get(i).equals(fullname)){
+                                            final ArrayList<String> fullnames = new ArrayList<>();
+                                            final ArrayList<String> dts = new ArrayList<>();
+                                            for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                                                        if(uidsnap.hasChild("device_token")){
-                                                            dts.add(uidsnap.child("device_token").getValue().toString());
+
+                                                fullnames.add(snapshot.getValue().toString().substring(0, snapshot.getValue().toString().length()-1));
+
+                                                if (snapshot.getValue().toString().substring(0, snapshot.getValue().toString().length() - 1).equals(fullname)) {
+                                                    String key = snapshot.getKey();
+                                                    dr.child(key).removeValue();
+
+                                                    final Snackbar snackbar = Snackbar.make(finalConvertView, "Dropped. Reload page", Snackbar.LENGTH_LONG);
+                                                    snackbar.setAction("Dismiss", new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            snackbar.dismiss();
                                                         }
-                                                    }
+                                                    });
+                                                    snackbar.show();
+
+
+                                                    final ArrayList<String> adviemail = new ArrayList<>();
+                                                    DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Chapters")
+                                                            .child(chapterid).child("Advisers");
+                                                    dr.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                                                                if(!snapshot.getKey().equals("device_tokens")){
+                                                                    adviemail.add(snapshot.child("email").getValue().toString());
+                                                                }
+
+
+                                                            }
+
+                                                            for (int i = 0; i < adviemail.size(); i++) {
+                                                                String subject = chosenevent.rownameevent + " Member Drop";
+
+                                                                String message = "A member dropped out from " + chosenevent.rownameevent + " Event " +
+                                                                        "\n" + fullname + " dropped. This email is an update of this team's status";
+                                                                SendMail sm = new SendMail(context, adviemail.get(i), subject, message);
+                                                                sm.execute();
+
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+
+
+                                                    DatabaseReference dru = FirebaseDatabase.getInstance().getReference().
+                                                            child("Chapters").child(chapterid).child("Users");
+                                                    dru.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            for (DataSnapshot uidsnap : dataSnapshot.getChildren()) {
+                                                                for (int i = 0; i < fullnames.size(); i++) {
+                                                                    if(fullnames.get(i).equals((uidsnap.child("fname").getValue().toString() + " " + uidsnap.child("lname").getValue().toString()))
+                                                                            && !fullnames.get(i).equals(fullname)){
+
+                                                                        if(uidsnap.hasChild("device_token")){
+                                                                            dts.add(uidsnap.child("device_token").getValue().toString());
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            DatabaseReference notifications = FirebaseDatabase.getInstance().getReference().child("notificationsDrop");
+                                                            notifications.child("5d3da0f6-e43f-4948-8bfe-658938104ddc")
+                                                                    .child("DeleteInfo").setValue(chosenevent.rownameevent + "SEPERATOR" + fullname + "SEPERATOR" + dts.toString());
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                        }
+                                                    });
                                                 }
                                             }
-                                            DatabaseReference notifications = FirebaseDatabase.getInstance().getReference().child("notificationsDrop");
-                                            notifications.child("5d3da0f6-e43f-4948-8bfe-658938104ddc")
-                                                    .child("DeleteInfo").setValue(checkedBook.rownameevent + "SEPERATOR" + fullname + "SEPERATOR" + dts.toString());
                                         }
 
                                         @Override
@@ -532,17 +550,19 @@ public class CurrentEventAdapter extends ArrayAdapter<CurrentEvent> {
 
                                         }
                                     });
+                                    //  dr.child(checkedBook.rownameevent).removeValue();
                                 }
+
                             }
-                        }
+                        });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                builder.show();
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
-                    //  dr.child(checkedBook.rownameevent).removeValue();
-                }
 
 
             }

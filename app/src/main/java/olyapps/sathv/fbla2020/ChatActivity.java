@@ -10,6 +10,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.bumptech.glide.Glide;
@@ -94,6 +96,9 @@ public class ChatActivity extends AppCompatActivity {
 
     private Toolbar mChatToolbar;
 
+    String chapterid;
+    String role;
+    String child ="Users";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +107,9 @@ public class ChatActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         mAuth = FirebaseAuth.getInstance();
         currentuser = mAuth.getCurrentUser();
+
+        SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        chapterid = spchap.getString("chapterID", "tempid");
 
         mChatToolbar = (Toolbar) findViewById(R.id.chat_app_bar);
         setSupportActionBar(mChatToolbar);
@@ -122,6 +130,8 @@ public class ChatActivity extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
         final String yourusername = sp.getString(getString(R.string.fname), "urfn") +
                 sp.getString(getString(R.string.lname), "urln");
+
+        role = sp.getString(getString(R.string.role), "role");
 
         final String withspace = sp.getString(getString(R.string.fname), "urfn") +" " +
                 sp.getString(getString(R.string.lname), "urln");
@@ -146,6 +156,11 @@ public class ChatActivity extends AppCompatActivity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
+        if(UserDetails.isadviser){
+            child= "Advisers";
+        }else{
+            child = "Users";
+        }
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
 
@@ -154,7 +169,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(Members.isthisagroup || Members.isgroupcreated){
+                if(MessagesInbox.isthisagroup || MessagesInbox.isgroupcreated){
                     Intent galleryIntent = new Intent();
                     galleryIntent.setType("image/*");
                     galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -172,7 +187,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        if (Members.isgroupcreated) {
+        if (MessagesInbox.isgroupcreated) {
             final ScrollView scrollView = findViewById(R.id.sv);
             scrollView.post(new Runnable() {
                 @Override
@@ -180,18 +195,20 @@ public class ChatActivity extends AppCompatActivity {
                     scrollView.fullScroll(View.FOCUS_DOWN);
                 }
             });
-            mTitleView.setText("Group: " + Members.groupname);
-            mLastSeenView.setText("Group chat");
-            custom_avatar.bind("Group: " + Members.groupname, null);
+            mTitleView.setText("Group: " + MessagesInbox.groupname);
+            mLastSeenView.setText("");
+            custom_avatar.bind("Group: " + MessagesInbox.groupname, null);
             customonline.setVisibility(View.INVISIBLE);
 
 
             viewmembercustom.setVisibility(View.VISIBLE);
             leavecustom.setVisibility(View.VISIBLE);
             addmembercustom.setVisibility(View.VISIBLE);
+            Log.d("DARBAR", "visible");
             addmembercustom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     String fa[] = LockScreen.getFnas();
                     String la[] = LockScreen.getLnas();
                     ArrayList<String> als = new ArrayList<>();
@@ -199,7 +216,7 @@ public class ChatActivity extends AppCompatActivity {
                         als.add(fa[i] + " " + la[i]);
                     }
 
-                    String allofthem = Members.names;
+                    String allofthem = MessagesInbox.names;
                     allofthem = allofthem.substring(0, allofthem.length() - 1);
                     String[] commas = allofthem.split(",");
 
@@ -214,6 +231,11 @@ public class ChatActivity extends AppCompatActivity {
 
                     final CharSequence cs[] = new CharSequence[als.size()];
 
+                    if(als.size()==0){
+                        Toast.makeText(getApplicationContext(), "There are no other members in this chapter for you " +
+                                "to add", Toast.LENGTH_LONG).show();
+                    }
+
                     final AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
                     builder.setTitle("Add member");
                     builder.setSingleChoiceItems(cs, -1, new DialogInterface.OnClickListener() {
@@ -226,7 +248,9 @@ public class ChatActivity extends AppCompatActivity {
                             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, final int which) {
-                                    final DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("TeamEvents");
+                                    final DatabaseReference dr = FirebaseDatabase.getInstance().getReference().
+                                            child("Chapters").child(chapterid).child("ChatMessages").child("Groups")
+                                            .child(MessagesInbox.groupname);
                                     dr.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -240,18 +264,36 @@ public class ChatActivity extends AppCompatActivity {
                                         }
                                     });
 
-                                    final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+
+                                    final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().
+                                            child("Chapters").child(chapterid);
                                     databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                                            DataSnapshot dsuser = dataSnapshot.child("Users");
+                                            DataSnapshot dsadvi = dataSnapshot.child("Advisers");
+
+                                            for (DataSnapshot snapshot : dsuser.getChildren()) {
                                                 if((snapshot.child("fname").getValue().toString() + " " +
                                                         snapshot.child("lname").getValue().toString()).equals(cs[which])){
                                                     String uid = snapshot.child("uid").getValue().toString();
                                                     if(snapshot.hasChild("groupspartof")){
                                                         String groupspartof = snapshot.child("groupspartof").getValue().toString();
-                                                        groupspartof = groupspartof + Members.groupname + ",";
-                                                        databaseReference.child(uid).child("groupspartof").setValue(groupspartof);
+                                                        groupspartof = groupspartof + MessagesInbox.groupname + ",";
+                                                        databaseReference.child("Users").child(uid).child("groupspartof").setValue(groupspartof);
+                                                    }
+
+                                                }
+                                            }
+                                            for (DataSnapshot snapshot : dsadvi.getChildren()) {
+                                                if((snapshot.child("fname").getValue().toString() + " " +
+                                                        snapshot.child("lname").getValue().toString()).equals(cs[which])){
+                                                    String uid = snapshot.child("uid").getValue().toString();
+                                                    if(snapshot.hasChild("groupspartof")){
+                                                        String groupspartof = snapshot.child("groupspartof").getValue().toString();
+                                                        groupspartof = groupspartof + MessagesInbox.groupname + ",";
+                                                        databaseReference.child("Advisers").child(uid).child("groupspartof").setValue(groupspartof);
                                                     }
 
                                                 }
@@ -264,11 +306,14 @@ public class ChatActivity extends AppCompatActivity {
                                         }
                                     });
 
+                                    addLine(cs[which] + " added to the group by " + withspace);
+
                                     Map<String, String> map = new HashMap<String, String>();
                                     map.put("message", cs[which] + " added to the group by " + withspace);
                                     map.put("user", withspace);
                                     map.put("senderuid", mAuth.getCurrentUser().getUid());
                                     map.put("type", "default");
+                                    map.put("to_devicetokens", MessagesInbox.groupdts);
                                     // reference1.push().setValue(map);
                                     // reference2.push().setValue(map);
 
@@ -277,11 +322,7 @@ public class ChatActivity extends AppCompatActivity {
                                     ref1.child(key).setValue(map);
                                     dialog.dismiss();
 
-                                    gn = FirebaseDatabase.getInstance().getReference().child("notificationsGroupMessages");
 
-                                    gn.child("f4289e07-57fc-4641-8b10-6674cf3f473e").child("GroupMessageInfo")
-                                            .setValue(key + "SEPERATOR" + Members.groupname + "SEPERATOR" + yourusername + "SEPERATOR" +
-                                                    Members.groupdts);
                                 }
                             });
                             builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -310,13 +351,20 @@ public class ChatActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             // Do nothing but close the dialog
                             String muid = mAuth.getCurrentUser().getUid();
-                            final DatabaseReference groups = FirebaseDatabase.getInstance().getReference().child("Users")
+                            if(role.equals("Adviser")){
+                                child = "Advisers";
+                            }else if(role.equals("Officer") || role.equals("Member")){
+                                child="Users";
+                            }
+                            final DatabaseReference groups = FirebaseDatabase.getInstance().getReference().
+                                    child("Chapters").child(chapterid).child(child)
                                     .child(muid);
                             groups.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                                     String cureentgroups = dataSnapshot.child("groupspartof").getValue().toString();
-                                    cureentgroups = cureentgroups.replace(Members.groupname + "," , "");
+                                    cureentgroups = cureentgroups.replace(MessagesInbox.groupname + "," , "");
                                     groups.child("groupspartof").setValue(cureentgroups);
                                 }
 
@@ -325,8 +373,9 @@ public class ChatActivity extends AppCompatActivity {
 
                                 }
                             });
-                            final DatabaseReference removename = FirebaseDatabase.getInstance().getReference().child("ChatMessages")
-                                    .child("Groups").child(Members.groupname);
+                            final DatabaseReference removename = FirebaseDatabase.getInstance().getReference().
+                                    child("Chapters").child(chapterid).child("ChatMessages")
+                                    .child("Groups").child(MessagesInbox.groupname);
                             removename.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -344,14 +393,15 @@ public class ChatActivity extends AppCompatActivity {
 
                                 }
                             });
-
-                            //addLine(withspace + " left the group");
+                           // MessagesInbox.groupdts = MessagesInbox.groupdts.replace(FirebaseInstanceId.getInstance().getToken() + ",", "");
+                            addLine(withspace + " left the group");
 
                             Map<String, String> map = new HashMap<String, String>();
                             map.put("message", withspace + " left the group");
                             map.put("user", withspace);
                             map.put("senderuid", mAuth.getCurrentUser().getUid());
                             map.put("type", "default");
+                            map.put("to_devicetokens",MessagesInbox.groupdts);
                             // reference1.push().setValue(map);
                             // reference2.push().setValue(map);
 
@@ -359,12 +409,6 @@ public class ChatActivity extends AppCompatActivity {
 
                             ref1.child(key).setValue(map);
                             dialog.dismiss();
-
-                            gn = FirebaseDatabase.getInstance().getReference().child("notificationsGroupMessages");
-
-                            gn.child("f4289e07-57fc-4641-8b10-6674cf3f473e").child("GroupMessageInfo")
-                                    .setValue(key + "SEPERATOR" + Members.groupname + "SEPERATOR" + yourusername + "SEPERATOR" +
-                                            Members.groupdts);
 
                             getFragmentManager().popBackStackImmediate();
                             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
@@ -399,7 +443,7 @@ public class ChatActivity extends AppCompatActivity {
                     ofsef = ofsef.substring(0, ofsef.length() - 1);
                     afsef = afsef.substring(0, afsef.length() - 1);
 
-                    String allofthem = Members.names;
+                    String allofthem = MessagesInbox.names;
                     allofthem = allofthem.substring(0, allofthem.length() - 1);
                     final String[] commas = allofthem.split(",");
 
@@ -407,7 +451,7 @@ public class ChatActivity extends AppCompatActivity {
                         if (ofsef.contains(commas[i])) {
                             commas[i] = commas[i] + " -- Officer";
                         } else if (afsef.contains(commas[i])) {
-                            commas[i] = commas[i] + " -- Advisor";
+                            commas[i] = commas[i] + " -- Adviser";
                         }
                     }
 
@@ -429,30 +473,40 @@ public class ChatActivity extends AppCompatActivity {
             });
 
 
-            DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference().child("ChatMessages").child("Groups").child(Members.groupname);
+            DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference().
+                    child("Chapters").child(chapterid).child("ChatMessages").child("Groups").child(MessagesInbox.groupname);
 
 
-            for (int i = 0; i < Members.groupmembers.size(); i++) {
+            for (int i = 0; i < MessagesInbox.groupmembers.size(); i++) {
                 String membername = "Member" + (i + 1);
-                if (Members.groupmembersuid.get(i).equals(currentuser.getUid())) {
+                if (MessagesInbox.groupmembersuid.get(i).equals(currentuser.getUid())) {
                     membername += "Creator";
                 }
-                ref3.child(membername).setValue(Members.groupmembers.get(i));
+                ref3.child(membername).setValue(MessagesInbox.groupmembers.get(i));
             }
 
-            for (int i = 0; i < Members.groupmembersuid.size(); i++) {
-                final DatabaseReference ref4 = FirebaseDatabase.getInstance().getReference().child("Users").
-                        child(Members.groupmembersuid.get(i));
+            for (int i = 0; i < MessagesInbox.groupmembersuid.size(); i++) {
+                final DatabaseReference ref4 = FirebaseDatabase.getInstance().getReference().
+                        child("Chapters").child(chapterid);
+                final int finalI = i;
                 ref4.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChild("groupspartof")) {
-                            already = dataSnapshot.child("groupspartof").getValue().toString();
 
-                            already = already + Members.groupname + ",";
-                            ref4.child("groupspartof").setValue(already);
+                        String cid = "";
+                        if(dataSnapshot.child("Users").hasChild(MessagesInbox.groupmembersuid.get(finalI))){
+                            cid="Users";
+                        }else if(dataSnapshot.child("Advisers").hasChild(MessagesInbox.groupmembersuid.get(finalI))){
+                            cid="Advisers";
+                        }
+
+                        if (dataSnapshot.child(cid).child(MessagesInbox.groupmembersuid.get(finalI)).hasChild("groupspartof")) {
+                            already = dataSnapshot.child(cid).child(MessagesInbox.groupmembersuid.get(finalI)).child("groupspartof").getValue().toString();
+
+                            already = already + MessagesInbox.groupname + ",";
+                            ref4.child(cid).child(MessagesInbox.groupmembersuid.get(finalI)).child("groupspartof").setValue(already);
                         } else {
-                            ref4.child("groupspartof").setValue(Members.groupname + ",");
+                            ref4.child(cid).child(MessagesInbox.groupmembersuid.get(finalI)).child("groupspartof").setValue(MessagesInbox.groupname + ",");
                         }
                     }
 
@@ -464,7 +518,9 @@ public class ChatActivity extends AppCompatActivity {
             }
 
 
-            ref1 = FirebaseDatabase.getInstance().getReference().child("ChatMessages").child("Groups").child(Members.groupname).child("messages");
+            ref1 = FirebaseDatabase.getInstance().getReference().
+                    child("Chapters")
+        .child(chapterid).child("ChatMessages").child("Groups").child(MessagesInbox.groupname).child("messages");
 
             sendButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -477,17 +533,13 @@ public class ChatActivity extends AppCompatActivity {
                         map.put("user", withspace);
                         map.put("senderuid", mAuth.getCurrentUser().getUid());
                         map.put("type", "text");
+                        map.put("to_devicetokens",MessagesInbox.groupdts);
 
 
                         String key = ref1.push().getKey();
                         ref1.child(key).setValue(map);
                         messageArea.setText("");
 
-                        gn = FirebaseDatabase.getInstance().getReference().child("notificationsGroupMessages");
-
-                        gn.child("f4289e07-57fc-4641-8b10-6674cf3f473e").child("GroupMessageInfo")
-                                .setValue(key + "SEPERATOR" + Members.groupname + "SEPERATOR" + yourusername + "SEPERATOR" +
-                                        Members.groupdts);
 
                     }
                     messageArea.setText("");
@@ -516,7 +568,12 @@ public class ChatActivity extends AppCompatActivity {
                     String key = dataSnapshot.getKey();
                     String message = map.get("message").toString();
                     String userName = map.get("user").toString();
-                    String senderuid = map.get("senderuid").toString();
+                    String senderuid = "";
+                    if(map.get("recieverUid")==null){
+                        senderuid = map.get("senderuid").toString();
+                    }else{
+                        senderuid = map.get("recieverUid").toString();
+                    }
 
                     String type = "";
                     if(map.get("type") != null){
@@ -559,7 +616,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 }
             });
-        } else if (Members.isthisagroup) {
+        } else if (MessagesInbox.isthisagroup) {
             final ScrollView scrollView = findViewById(R.id.sv);
             scrollView.post(new Runnable() {
                 @Override
@@ -567,15 +624,16 @@ public class ChatActivity extends AppCompatActivity {
                     scrollView.fullScroll(View.FOCUS_DOWN);
                 }
             });
-            mTitleView.setText("Group: " + Members.groupname);
-            ref1 = FirebaseDatabase.getInstance().getReference().child("ChatMessages").child("Groups").child(Members.groupname).child("messages");
+            mTitleView.setText("Group: " + MessagesInbox.groupname);
+            ref1 = FirebaseDatabase.getInstance().getReference().
+                    child("Chapters").child(chapterid).child("ChatMessages").child("Groups").child(MessagesInbox.groupname).child("messages");
 
             //          String allofthem = Members.names;
 //            allofthem = allofthem.substring(0, allofthem.length()-1);
             customonline.setVisibility(View.INVISIBLE);
 
             mLastSeenView.setText("");
-            custom_avatar.bind("Group: " + Members.groupname, null);
+            custom_avatar.bind("Group: " + MessagesInbox.groupname, null);
 
 
             viewmembercustom.setVisibility(View.VISIBLE);
@@ -584,6 +642,7 @@ public class ChatActivity extends AppCompatActivity {
             addmembercustom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.d("DARBAR", "HERRRRR");
                     String fa[] = LockScreen.getFnas();
                     String la[] = LockScreen.getLnas();
                     ArrayList<String> als = new ArrayList<>();
@@ -591,7 +650,7 @@ public class ChatActivity extends AppCompatActivity {
                         als.add(fa[i] + " " + la[i]);
                     }
 
-                    String allofthem = Members.names;
+                    String allofthem = MessagesInbox.names;
                     allofthem = allofthem.substring(0, allofthem.length() - 1);
                     String[] commas = allofthem.split(",");
 
@@ -606,6 +665,11 @@ public class ChatActivity extends AppCompatActivity {
 
                     final CharSequence cs[] = new CharSequence[als.size()];
 
+                    if(als.size()==0){
+                        Toast.makeText(getApplicationContext(), "There are no other members in this chapter for you " +
+                                "to add", Toast.LENGTH_LONG).show();
+                    }
+
                     final AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
                     builder.setTitle("Add member");
                     builder.setSingleChoiceItems(cs, -1, new DialogInterface.OnClickListener() {
@@ -617,7 +681,8 @@ public class ChatActivity extends AppCompatActivity {
                             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, final int which) {
-                                    final DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("TeamEvents");
+                                    final DatabaseReference dr = FirebaseDatabase.getInstance().getReference().
+                                            child("Chapters").child(chapterid).child("ChatMessages").child("Groups").child(MessagesInbox.groupname);
                                     dr.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -631,18 +696,35 @@ public class ChatActivity extends AppCompatActivity {
                                         }
                                     });
 
-                                    final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+                                    final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().
+                                            child("Chapters").child(chapterid);
                                     databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                                            DataSnapshot dsuser = dataSnapshot.child("Users");
+                                            DataSnapshot dsadvi = dataSnapshot.child("Advisers");
+
+                                            for (DataSnapshot snapshot : dsuser.getChildren()) {
                                                 if((snapshot.child("fname").getValue().toString() + " " +
                                                         snapshot.child("lname").getValue().toString()).equals(cs[which])){
                                                     String uid = snapshot.child("uid").getValue().toString();
                                                     if(snapshot.hasChild("groupspartof")){
                                                         String groupspartof = snapshot.child("groupspartof").getValue().toString();
-                                                        groupspartof = groupspartof + Members.groupname + ",";
-                                                        databaseReference.child(uid).child("groupspartof").setValue(groupspartof);
+                                                        groupspartof = groupspartof + MessagesInbox.groupname + ",";
+                                                        databaseReference.child("Users").child(uid).child("groupspartof").setValue(groupspartof);
+                                                    }
+
+                                                }
+                                            }
+                                            for (DataSnapshot snapshot : dsadvi.getChildren()) {
+                                                if((snapshot.child("fname").getValue().toString() + " " +
+                                                        snapshot.child("lname").getValue().toString()).equals(cs[which])){
+                                                    String uid = snapshot.child("uid").getValue().toString();
+                                                    if(snapshot.hasChild("groupspartof")){
+                                                        String groupspartof = snapshot.child("groupspartof").getValue().toString();
+                                                        groupspartof = groupspartof + MessagesInbox.groupname + ",";
+                                                        databaseReference.child("Advisers").child(uid).child("groupspartof").setValue(groupspartof);
                                                     }
 
                                                 }
@@ -654,12 +736,14 @@ public class ChatActivity extends AppCompatActivity {
 
                                         }
                                     });
+                                    addLine(cs[which] + " added to the group by " + withspace);
 
                                     Map<String, String> map = new HashMap<String, String>();
                                     map.put("message", cs[which] + " added to the group by " + withspace);
                                     map.put("user", withspace);
                                     map.put("senderuid", mAuth.getCurrentUser().getUid());
                                     map.put("type", "default");
+                                    map.put("to_devicetokens",MessagesInbox.groupdts);
                                     // reference1.push().setValue(map);
                                     // reference2.push().setValue(map);
 
@@ -668,11 +752,7 @@ public class ChatActivity extends AppCompatActivity {
                                     ref1.child(key).setValue(map);
                                     dialog.dismiss();
 
-                                    gn = FirebaseDatabase.getInstance().getReference().child("notificationsGroupMessages");
 
-                                    gn.child("f4289e07-57fc-4641-8b10-6674cf3f473e").child("GroupMessageInfo")
-                                            .setValue(key + "SEPERATOR" + Members.groupname + "SEPERATOR" + yourusername + "SEPERATOR" +
-                                                    Members.groupdts);
                                 }
                             });
                             builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -697,15 +777,21 @@ public class ChatActivity extends AppCompatActivity {
 
                         public void onClick(DialogInterface dialog, int which) {
                             // Do nothing but close the dialog
-                            String muid = mAuth.getCurrentUser().getUid();
-                            final DatabaseReference groups = FirebaseDatabase.getInstance().getReference().child("Users")
-                                    .child(muid);
+                            final String muid = mAuth.getCurrentUser().getUid();
+                            final DatabaseReference groups = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapterid);
                             groups.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    String cureentgroups = dataSnapshot.child("groupspartof").getValue().toString();
-                                    cureentgroups = cureentgroups.replace(Members.groupname + "," , "");
-                                    groups.child("groupspartof").setValue(cureentgroups);
+                                    if(dataSnapshot.child("Users").hasChild(muid)){
+                                        String cureentgroups = dataSnapshot.child("Users").child(muid).child("groupspartof").getValue().toString();
+                                        cureentgroups = cureentgroups.replace(MessagesInbox.groupname + "," , "");
+                                        groups.child("Users").child(muid).child("groupspartof").setValue(cureentgroups);
+                                    }else if(dataSnapshot.child("Advisers").hasChild(muid)){
+                                        String cureentgroups = dataSnapshot.child("Advisers").child(muid).child("groupspartof").getValue().toString();
+                                        cureentgroups = cureentgroups.replace(MessagesInbox.groupname + "," , "");
+                                        groups.child("Advisers").child(muid).child("groupspartof").setValue(cureentgroups);
+                                    }
+
                                 }
 
                                 @Override
@@ -713,8 +799,8 @@ public class ChatActivity extends AppCompatActivity {
 
                                 }
                             });
-                            final DatabaseReference removename = FirebaseDatabase.getInstance().getReference().child("ChatMessages")
-                                    .child("Groups").child(Members.groupname);
+                            final DatabaseReference removename = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapterid).child("ChatMessages")
+                                    .child("Groups").child(MessagesInbox.groupname);
                             removename.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -733,13 +819,14 @@ public class ChatActivity extends AppCompatActivity {
                                 }
                             });
 
-                            //addLine(withspace + " left the group");
+                            addLine(withspace + " left the group");
 
                             Map<String, String> map = new HashMap<String, String>();
                             map.put("message", withspace + " left the group");
                             map.put("user", withspace);
                             map.put("senderuid", mAuth.getCurrentUser().getUid());
                             map.put("type", "default");
+                            map.put("to_devicetokens",MessagesInbox.groupdts);
                             // reference1.push().setValue(map);
                             // reference2.push().setValue(map);
 
@@ -748,11 +835,7 @@ public class ChatActivity extends AppCompatActivity {
                             ref1.child(key).setValue(map);
                             dialog.dismiss();
 
-                            gn = FirebaseDatabase.getInstance().getReference().child("notificationsGroupMessages");
 
-                            gn.child("f4289e07-57fc-4641-8b10-6674cf3f473e").child("GroupMessageInfo")
-                                    .setValue(key + "SEPERATOR" + Members.groupname + "SEPERATOR" + yourusername + "SEPERATOR" +
-                                            Members.groupdts);
 
                             getFragmentManager().popBackStackImmediate();
                             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
@@ -774,31 +857,11 @@ public class ChatActivity extends AppCompatActivity {
             viewmembercustom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String ofsef = "";
-                    String afsef = "";
-                    for (int i = 0; i < LockScreen.getOfficall().length; i++) {
-                        ofsef = ofsef + LockScreen.getOfficall()[i] + ",";
-                    }
 
-                    for (int i = 0; i < LockScreen.getAdviarray().length; i++) {
-                        afsef = afsef + LockScreen.getAdviarray()[i] + ",";
-                    }
 
-                    ofsef = ofsef.substring(0, ofsef.length() - 1);
-                    afsef = afsef.substring(0, afsef.length() - 1);
-
-                    String allofthem = Members.names;
+                    String allofthem = MessagesInbox.names;
                     allofthem = allofthem.substring(0, allofthem.length() - 1);
                     final String[] commas = allofthem.split(",");
-
-                    for (int i = 0; i < commas.length; i++) {
-                        if (ofsef.contains(commas[i])) {
-                            commas[i] = commas[i] + " -- Officer";
-                        } else if (afsef.contains(commas[i])) {
-                            commas[i] = commas[i] + " -- Advisor";
-                        }
-                    }
-
 
                     final AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
                     builder.setTitle("View Group Members")
@@ -827,6 +890,7 @@ public class ChatActivity extends AppCompatActivity {
                         map.put("user", withspace);
                         map.put("senderuid", mAuth.getCurrentUser().getUid());
                         map.put("type", "text");
+                        map.put("to_devicetokens",MessagesInbox.groupdts);
                         // reference1.push().setValue(map);
                         // reference2.push().setValue(map);
 
@@ -835,11 +899,6 @@ public class ChatActivity extends AppCompatActivity {
                         ref1.child(key).setValue(map);
                         messageArea.setText("");
 
-                        gn = FirebaseDatabase.getInstance().getReference().child("notificationsGroupMessages");
-
-                        gn.child("f4289e07-57fc-4641-8b10-6674cf3f473e").child("GroupMessageInfo")
-                                .setValue(key + "SEPERATOR" + Members.groupname + "SEPERATOR" + yourusername + "SEPERATOR" +
-                                        Members.groupdts);
 
 
                         final ScrollView scrollView = findViewById(R.id.sv);
@@ -877,7 +936,13 @@ public class ChatActivity extends AppCompatActivity {
                     String key = dataSnapshot.getKey();
                     String message = map.get("message").toString();
                     String userName = map.get("user").toString();
-                    String senderuid = map.get("senderuid").toString();
+                    String senderuid = "";
+                    if(map.get("recieverUid")==null){
+                        senderuid = map.get("senderuid").toString();
+                    }else{
+                        senderuid = map.get("recieverUid").toString();
+                    }
+
 
 
                     String type = map.get("type").toString();
@@ -923,9 +988,10 @@ public class ChatActivity extends AppCompatActivity {
             mTitleView.setText(UserDetails.fullname);
             viewmembercustom.setVisibility(View.INVISIBLE);
             leavecustom.setVisibility(View.INVISIBLE);
+            addmembercustom.setVisibility(View.INVISIBLE);
 
-            mRootRef = FirebaseDatabase.getInstance().getReference();
-            mRootRef.child("Users").child(UserDetails.chatuid).addValueEventListener(new ValueEventListener() {
+            mRootRef = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapterid);
+            mRootRef.child(child).child(UserDetails.chatuid).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -974,10 +1040,13 @@ public class ChatActivity extends AppCompatActivity {
             });
 
 
-            ref1 = FirebaseDatabase.getInstance().getReference().child("ChatMessages").child(yourusername + "_" + UserDetails.chatWith);
-            ref2 = FirebaseDatabase.getInstance().getReference().child("ChatMessages").child(UserDetails.chatWith + "_" + yourusername);
+            ref1 = FirebaseDatabase.getInstance().getReference().
+                    child("Chapters").child(chapterid).child("ChatMessages").child(yourusername + "_" + UserDetails.chatWith);
+            ref2 = FirebaseDatabase.getInstance().getReference().
+                    child("Chapters").child(chapterid).child("ChatMessages").child(UserDetails.chatWith + "_" + yourusername);
 
-            notifications = FirebaseDatabase.getInstance().getReference().child("notificationsMessages");
+            notifications = FirebaseDatabase.getInstance().getReference().
+                    child("Chapters").child(chapterid).child("notificationsMessages");
             sendButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1001,9 +1070,14 @@ public class ChatActivity extends AppCompatActivity {
                         ref2.push().setValue(map);
                         messageArea.setText("");
 
+                        String adviser = "";
+                        if(UserDetails.isadviser){
+                            adviser="ADVISER";
+                        }
+
                         notifications.child("15d7c782-9b57-11e8-98d0-529269fb1459")
                                 .child("Messagekey").setValue(key +
-                                "SEPERATOR" + yourusername + "_" + UserDetails.chatWith);
+                                "SEPERATOR" + yourusername + "_" + UserDetails.chatWith+"SEPERATOR"+adviser);
                         final ScrollView scrollView = findViewById(R.id.sv);
                         scrollView.post(new Runnable() {
                             @Override
@@ -1083,12 +1157,12 @@ public class ChatActivity extends AppCompatActivity {
         }
 
     }
-
-    public void addMessageBox(final String message, String uid, int type, String textorimage) {
+    public void addMessageBox(final String message, final String uid, int type, String textorimage) {
         TextView textView = new TextView(this);
         textView.setTextSize(16);
         textView.setPadding(30, 30, 30, 30);
         textView.setMaxWidth(700);
+
 
         ImageView imageView = new ImageView(this);
        // imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -1105,14 +1179,26 @@ public class ChatActivity extends AppCompatActivity {
         final CircleImageView profileImage = new CircleImageView(this);
         final AvatarView profileavatar = new AvatarView(this);
 
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
-        databaseReference.child(uid).addValueEventListener(new ValueEventListener() {
+
+
+        final DatabaseReference databaseReference =
+                FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapterid);
+
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child("profpic").getValue().toString().equals("nocustomimage")) {
+                String childid ="";
+                if(dataSnapshot.child("Advisers").hasChild(uid)){
+                    childid = "Advisers";
+                }else if(dataSnapshot.child("Users").hasChild(uid)){
+                    childid="Users";
+                }
+
+                if (dataSnapshot.child(childid).child(uid).child("profpic").getValue().toString().equals("nocustomimage")) {
                     Glide.with(getApplicationContext()).load(R.drawable.defaultimg).into(profileImage);
                 } else {
-                    String uri = dataSnapshot.child("profpic").getValue().toString();
+                    String uri = dataSnapshot.child(childid).child(uid).child("profpic").getValue().toString();
                     Glide.with(getApplicationContext()).load(uri).into(profileImage);
                 }
             }
@@ -1264,8 +1350,10 @@ public class ChatActivity extends AppCompatActivity {
             final String yourusername = sp.getString(getString(R.string.fname), "urfn") +
                     sp.getString(getString(R.string.lname), "urln");
 
-            ref1 = FirebaseDatabase.getInstance().getReference().child("ChatMessages").child(yourusername + "_" + UserDetails.chatWith);
-            ref2 = FirebaseDatabase.getInstance().getReference().child("ChatMessages").child(UserDetails.chatWith + "_" + yourusername);
+            ref1 = FirebaseDatabase.getInstance().getReference().
+                    child("Chapters").child(chapterid).child("ChatMessages").child(yourusername + "_" + UserDetails.chatWith);
+            ref2 = FirebaseDatabase.getInstance().getReference().
+                    child("Chapters").child(chapterid).child("ChatMessages").child(UserDetails.chatWith + "_" + yourusername);
 
 
             final String key = ref1.push().getKey();
@@ -1315,7 +1403,8 @@ public class ChatActivity extends AppCompatActivity {
 
             Uri imageUri = data.getData();
 
-            ref1 = FirebaseDatabase.getInstance().getReference().child("ChatMessages").child("Groups").child(Members.groupname).child("messages");
+            ref1 = FirebaseDatabase.getInstance().getReference().
+                    child("Chapters").child(chapterid).child("ChatMessages").child("Groups").child(MessagesInbox.groupname).child("messages");
 
             final String key = ref1.push().getKey();
 
@@ -1349,14 +1438,9 @@ public class ChatActivity extends AppCompatActivity {
                         map.put("user", yourusername);
                         map.put("senderuid", mAuth.getCurrentUser().getUid());
                         map.put("type", "image");
+                        map.put("to_devicetokens",MessagesInbox.groupdts);
 
                         ref1.child(key).setValue(map);
-                        gn = FirebaseDatabase.getInstance().getReference().child("notificationsGroupMessages");
-
-                        gn.child("f4289e07-57fc-4641-8b10-6674cf3f473e").child("GroupMessageInfo")
-                                .setValue(key + "SEPERATOR" + Members.groupname + "SEPERATOR" + yourusername + "SEPERATOR" +
-                                        Members.groupdts);
-
 
                     }
                 }

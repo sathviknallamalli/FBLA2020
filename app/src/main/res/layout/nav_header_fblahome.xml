@@ -5,11 +5,11 @@
     android:id="@+id/linearLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg"
+    android:background="#00bdff"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <TextView
-        android:id="@+id/textView16"
+        android:id="@+id/chapterheader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -51,12 +51,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_logout" />
 
+    <ImageView
+        android:id="@+id/imageView20"
+        android:layout_width="55dp"
+        android:layout_marginLeft="10dp"
+        android:layout_height="60dp"
+        android:layout_alignTop="@id/viewSwitcher"
+        android:layout_toRightOf="@id/viewSwitcher"
+        app:srcCompat="@drawable/mylogowhite" />
+
     <ViewSwitcher
         android:id="@+id/viewSwitcher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/linearLayout2"
-        android:layout_below="@+id/textView16"
+        android:layout_below="@+id/chapterheader"
         android:layout_marginTop="16dp">
 
         <me.fahmisdk6.avatarview.AvatarView
@@ -108,7 +117,7 @@
         app:layout_constraintVertical_bias="0.953">
 
         <TextView
-            android:id="@+id/fullname"
+            android:id="@+id/fullnameheader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -123,7 +132,7 @@
             app:layout_constraintVertical_bias="0.777" />
 
         <TextView
-            android:id="@+id/emailandgrade"
+            android:id="@+id/emailheader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"

@@ -1,6 +1,8 @@
 package olyapps.sathv.fbla2020;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -35,6 +37,7 @@ public class PostSingleActivity extends AppCompatActivity {
 
     ListView singlecomments;
 
+    String chapid;
     ArrayList<Comment> comments;
     CommentAdapter cadapter;
     @Override
@@ -49,7 +52,10 @@ public class PostSingleActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Blog");
+        SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        chapid = spchap.getString("chapterID", "tempid");
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid).child("ActivityStream");
 
         post_key = getIntent().getExtras().getString("post_id");
 
@@ -79,7 +85,8 @@ public class PostSingleActivity extends AppCompatActivity {
                 String post_username = dataSnapshot.child("username").getValue().toString();
                 String postuid = dataSnapshot.child("uid").getValue().toString();
 
-                DatabaseReference udatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+                DatabaseReference udatabase = FirebaseDatabase.getInstance().getReference().
+                        child("Chapters").child(chapid).child("Users");
                 udatabase.child(postuid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -112,6 +119,7 @@ public class PostSingleActivity extends AppCompatActivity {
                 postdesc.setText(post_desc);
 
                 if (imageurl.equals("No image in this post")) {
+                    postimg.setVisibility(View.GONE);
                     Glide.with(getApplicationContext()).load("http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png").
                             into(postimg);
 

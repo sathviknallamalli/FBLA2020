@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -31,7 +30,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,11 +42,9 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView bloglist;
     DatabaseReference mDatabase;
 
-    boolean mProcessLike = false;
 
     FirebaseAuth mAuth;
 
-    DatabaseReference mDatabaselike;
 
     LinearLayoutManager mLinearLayoutManager;
 
@@ -57,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     static int totalcount;
     static int tc;
     TextView noposts;
+
+    String chapid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +71,15 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Blog");
+        SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        chapid = spchap.getString("chapterID", "tempid");
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid).child("ActivityStream");
         mDatabase.keepSynced(true);
 
         noposts = findViewById(R.id.nopost);
 
-        mDatabaselike = FirebaseDatabase.getInstance().getReference().child("Likes");
-        bloglist = findViewById(R.id.blog_list);
+         bloglist = findViewById(R.id.blog_list);
         // bloglist.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(MainActivity.this);
         mLinearLayoutManager.setReverseLayout(true);
@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
 
                 final String post_key = getRef(position).getKey();
 
-                holder.setLikebutn(post_key);
 
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -136,35 +135,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                holder.likebutn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mProcessLike = true;
-                        mDatabase.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                if (mProcessLike) {
-                                    if (dataSnapshot.child(post_key).hasChild(mAuth.getCurrentUser().getUid())) {
-
-                                        mDatabaselike.child(post_key).child(mAuth.getCurrentUser().getUid()).removeValue();
-                                        mProcessLike = false;
-
-                                    } else {
-                                        mDatabaselike.child(post_key).child(mAuth.getCurrentUser().getUid()).setValue("Random Value");
-                                        mProcessLike = false;
-
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-                });
 
                 holder.list_comments.setOnTouchListener(new View.OnTouchListener() {
                     @Override
@@ -175,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
 
-                holder.setListView(post_key);
+                holder.setListView(post_key, chapid);
 
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -228,11 +198,8 @@ public class MainActivity extends AppCompatActivity {
     public static class BlogViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
-        Button likebutn;
-        ImageView sendbtn;
-        DatabaseReference mDatabaselike;
+       ImageView sendbtn;
         DatabaseReference udatabase;
-        DatabaseReference mDatabaseComment;
         FirebaseAuth mAuth;
         ImageView post_image;
         CircleImageView uimage;
@@ -240,18 +207,19 @@ public class MainActivity extends AppCompatActivity {
 
         ListView list_comments;
 
+
         public BlogViewHolder(View itemView) {
             super(itemView);
 
+            SharedPreferences spchap = itemView.getContext().getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+            String chapid = spchap.getString("chapterID", "tempid");
+
             mView = itemView;
-            likebutn = mView.findViewById(R.id.like_btn);
             mcomment = mView.findViewById(R.id.commentArea);
-            mDatabaselike = FirebaseDatabase.getInstance().getReference().child("Likes");
-            udatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+            udatabase = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid).child("Users");
             mAuth = FirebaseAuth.getInstance();
             sendbtn = mView.findViewById(R.id.sendcomment);
 
-            mDatabaselike.keepSynced(true);
 
             list_comments = mView.findViewById(R.id.list_comments);
         }
@@ -314,30 +282,11 @@ public class MainActivity extends AppCompatActivity {
             post_timestamp.setText(timestamp);
         }
 
-        public void setLikebutn(final String post_key) {
-            mDatabaselike.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.child(post_key).hasChild(mAuth.getCurrentUser().getUid())) {
 
-                        Drawable img = mView.getContext().getResources().getDrawable(R.drawable.ic_thumbred);
-                        likebutn.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
 
-                    } else {
-                        Drawable img = mView.getContext().getResources().getDrawable(R.drawable.ic_thumbdark);
-                        likebutn.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-        public void setListView(String post_key) {
-            final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Blog")
+        public void setListView(String post_key, String chapid) {
+            final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().
+                    child("Chapters").child(chapid).child("ActivityStream")
                     .child(post_key);
 
             final ArrayList<Comment> comments = new ArrayList<>();
@@ -384,22 +333,28 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
 
         SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
-        String role = sp.getString(getString(R.string.role), "role");
+        final String role = sp.getString(getString(R.string.role), "role");
 
-        if (role.equals("Officer") || role.equals("Advisor")) {
-            getMenuInflater().inflate(R.menu.main_menu, menu);
+        check(new MACallback() {
+            @Override
+            public void onCallback(Boolean canofficer, Boolean canadviser) {
+                if ((role.equals("Officer") && canofficer) || (role.equals("Adviser") && canadviser)) {
+                    getMenuInflater().inflate(R.menu.main_menu, menu);
 
-            for (int i = 0; i < menu.size(); i++) {
-                Drawable drawable = menu.getItem(i).getIcon();
-                if (drawable != null) {
-                    drawable.mutate();
-                    drawable.setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                    for (int i = 0; i < menu.size(); i++) {
+                        Drawable drawable = menu.getItem(i).getIcon();
+                        if (drawable != null) {
+                            drawable.mutate();
+                            drawable.setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                        }
+                    }
                 }
             }
-        }
+        });
+
         return super.onCreateOptionsMenu(menu);
 
 
@@ -428,22 +383,33 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
-    private static ArrayList<String> collectEventdata(Map<String, Object> users, String fieldName) {
-        ArrayList<String> information = new ArrayList<>();
-        //iterate through each user, ignoring their UID
-        for (Map.Entry<String, Object> entry : users.entrySet()) {
+    public void check(final MACallback maCallback) {
+        SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        String chapid = spchap.getString("chapterID", "tempid");
 
-            //Get user map
-            Map singleUser = (Map) entry.getValue();
+        DatabaseReference calrolecheck = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid)
+                .child("Roles");
+        calrolecheck.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean canofficer = false;
+                boolean canadviser = false;
 
-            if (singleUser != null) {
-                information.add((String) singleUser.get(fieldName).toString());
+                if (dataSnapshot.child("OfficerRules").getValue().toString().contains("0")) {
+                    canofficer = true;
+                }
+
+                if (dataSnapshot.child("AdviserRules").getValue().toString().contains("0")) {
+                    canadviser = true;
+                }
+                maCallback.onCallback(canofficer, canadviser);
             }
 
-            //Get phone field and append to list
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        }
-
-        return information;
+            }
+        });
     }
+
 }

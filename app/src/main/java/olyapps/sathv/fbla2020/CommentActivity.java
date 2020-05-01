@@ -1,6 +1,8 @@
 package olyapps.sathv.fbla2020;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,7 +25,6 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +38,8 @@ public class CommentActivity extends AppCompatActivity {
     ListView commentactivity;
     ArrayList<Comment> comments;
     CommentAdapter cadapter;
+
+    String chapid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +63,12 @@ public class CommentActivity extends AppCompatActivity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Blog")
+        SharedPreferences spchap = getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+        chapid = spchap.getString("chapterID", "tempid");
+
+
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().
+                child("Chapters").child(chapid).child("ActivityStream")
                 .child(post_key);
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -124,22 +132,23 @@ public class CommentActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.check) {
 
 
+            if (!TextUtils.isEmpty(commenttext.getText().toString())) {
+                String comment = commenttext.getText().toString();
 
-                if(!TextUtils.isEmpty(commenttext.getText().toString())){
-                    String comment = commenttext.getText().toString();
-                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Blog");
+                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().
+                        child("Chapters").child(chapid).child("ActivityStream");
 
-                    Intent i = getIntent();
-                    String post_key = i.getStringExtra("post_key");
+                Intent i = getIntent();
+                String post_key = i.getStringExtra("post_key");
 
-                    String key = databaseReference.child(post_key).child("Comments").push().getKey();
+                String key = databaseReference.child(post_key).child("Comments").push().getKey();
 
 
-                    databaseReference.child(post_key).child("Comments").child(key).child("commenttext").setValue(comment);
-                    databaseReference.child(post_key).child("Comments").child(key).child("useruid").setValue(mAuth.getCurrentUser().getUid());
-                    databaseReference.child(post_key).child("Comments").child(key).child("time").setValue(ServerValue.TIMESTAMP);
+                databaseReference.child(post_key).child("Comments").child(key).child("commenttext").setValue(comment);
+                databaseReference.child(post_key).child("Comments").child(key).child("useruid").setValue(mAuth.getCurrentUser().getUid());
+                databaseReference.child(post_key).child("Comments").child(key).child("time").setValue(ServerValue.TIMESTAMP);
 
-                }
+            }
             Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
@@ -158,22 +167,5 @@ public class CommentActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private ArrayList<String> collectEventdata(Map<String, Object> users, String fieldName) {
-        ArrayList<String> information = new ArrayList<>();
-        //iterate through each user, ignoring their UID
-        for (Map.Entry<String, Object> entry : users.entrySet()) {
 
-            //Get user map
-            Map singleUser = (Map) entry.getValue();
-
-            if(singleUser != null){
-                information.add((String) singleUser.get(fieldName).toString());
-            }
-
-            //Get phone field and append to list
-
-        }
-
-        return information;
-    }
 }

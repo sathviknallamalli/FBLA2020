@@ -43,8 +43,8 @@ public class ViewPageConversation extends Fragment {
                 int delete = spacechar(OtherProfile.namewithspace);
                 UserDetails.chatWith = OtherProfile.namewithspace.replace(OtherProfile.namewithspace.charAt(delete) + "", "");
 
-                Members.isgroupcreated = false;
-                Members.isthisagroup = false;
+                MessagesInbox.isgroupcreated = false;
+                MessagesInbox.isthisagroup = false;
 
                 startActivity(i);
 

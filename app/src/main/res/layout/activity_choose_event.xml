@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/splashgrad"
+    android:layout_height="match_parent"
+    tools:context=".ChooseEvent">
+
+    <TextView
+        android:id="@+id/question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="60dp"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/yes"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@+id/question"
+        android:layout_marginLeft="16dp"
+        android:textSize="24sp"
+        android:layout_marginRight="16dp"
+        android:textColor="@color/white"
+        android:alpha=".8"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/yesbackground"
+        android:text="Yes"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <Button
+        android:id="@+id/no"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@+id/yes"
+        android:layout_marginLeft="16dp"
+        android:textSize="24sp"
+        android:layout_marginRight="16dp"
+        android:textColor="@color/white"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/nobackground"
+        android:text="No"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <Button
+        android:id="@+id/results"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:visibility="invisible"
+        android:layout_below="@+id/question"
+        android:layout_marginLeft="16dp"
+        android:textSize="18sp"
+        android:layout_marginRight="16dp"
+        android:textColor="@color/white"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/input_background"
+        android:text="Results"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+
+
+</RelativeLayout>

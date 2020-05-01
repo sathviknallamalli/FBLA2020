@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitStart"
+            app:srcCompat="@drawable/faqtitle" />
+
+        <TextView
+            android:id="@+id/textView31"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text="Competitions"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textView42"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
+            android:textStyle="italic"
+            android:text="What is the best resource to prepare for objective tests?"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:text="The national center has provided an FBLA Competitive Events Online Reference Guide.  By clicking on the obejctive test button, a list of all the tests will show.  The competency PDF that is linked has the same competencies that are provided to test writers.  By studying these competencies, or more specifically, the items that are unfamiliar, you increase your odds of being able to excel during the test.  There are also a few sample questions available.  All questions are multiple choice, but written based on the competencies."
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView23"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="32dp"
+            android:textStyle="italic"
+            android:text="How can I prepare for a prepared performance event?"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView41"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:text="There are several things that can be done to prepare for a performance event:\n\nKnow what is expected.  Read all you can about the event.  Is there a topic?  What is the time limit?  Will there be a Q and A at the end?\n\nReview the rating sheet.  This sheet is what judges will use to score performances, so knowing what is expected is critical.\n\nPractice.  Practice in front of classmates. Practice in front of family. Practice in front of local business partners.  Practice in front of teachers and administrators.  Have each of them complete a rating sheet and encourage them to be completely honest.  Use the feedback to work to improve your performance.
+\n\nMemorize.  Yes, you can have a note card in your pocket, but the people who walk across the stage at NLC have completely memorized their performances.  Practice until you know your performance from memory.
+\n\nWatch others.  YouTube and SchoolTube have performances that are posted from not only national events but from other state competitions.  Watch as much as you can.  Use the rating sheets to rate their performances and see what they did that was good and what could be done to make yours better, too.
+\n\nDon’t forget to shake hands with the judges and thank them for their time!  While this seems simple, it can make the difference between making finals or not or making stage or not, so be sure to shake hands and thank the judges."
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="32dp"
+            android:textStyle="italic"
+            android:text="How many competitors are eligible to compete at NLC?"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView43"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:text="Beginning with NLC 2016, each state may send four (4) competitors in each event.  This means significantly more competition and significantly more opportunities for students to compete."
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="32dp"
+            android:textStyle="italic"
+            android:text="What tips do you have about the events with reports?"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView40"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:text="The written report is important.  It constitutes 2/3 of the total score, so getting each point possible is incredibly important.  Some tips include:
+
+\n\n1.) Review the event description and requirements.  What is the purpose of the report?
+\n\n2.) Review the report rating sheet.  Does the report covered all the required content?
+\n\n3.) Be unique.  Do not just take last year’s report and change names and dates.
+\n\n4.) Proofread.  You cannot have your report read too many times to catch both spelling and grammatical errors.
+\n\n5.) Use graphics.  While the overwhelming majority should be text, you can be creative in the use of pictures and other graphics.
+\n\nThese events, with the exception of Local Chapter Annual Business Report, will have a preliminary performance for all competitors, so be sure to look at the tips for prepared performances."
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="32dp"
+            android:textStyle="italic"
+            android:text="How can I decide which event is a good fit for me?"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView44"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:text="A graph has been developed by the national center that helps guide members in choosing events that are best suited for their interests.  This chart can be found online on the national website."
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+
+
+        <TextView
+            android:id="@+id/textView32"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:text="Membership"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:textStyle="italic"
+            android:text="How much are FBLA membership dues?"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView45"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:text="Washington FBLA Regional, State, and National Membership dues are $20.00 per student.
+
+\n\nDues in FBLA are unified.  This means you must join the state and national organization to be an officially recognized member.
+\nNational dues are $6.00 and have not increased since 1989.
+\nState dues are $10.00.
+\nRegional dues are $4.00"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="32dp"
+            android:textStyle="italic"
+            android:text="How do I start a new chapter?"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView46"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:text="The first step in starting a new chapter is to request a Chapter Organization Packet. To request a Chapter Organization Packet, please submit a request form and the packet is immediately downloadable."
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+
+
+        <TextView
+            android:id="@+id/textView30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:text="Conferences"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
+
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:textStyle="italic"
+            android:text="Where can I find out more about the FBLA Institute for Leaders (IFL)?"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView47"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:text="FBLA Institute for Leaders is the premier business and leadership development program offered by National FBLA-PBL.  IFL is held in conjunction with the FBLA National Leadership Conference each year.
+
+\n\nVisit www.fblapblifl.org for more information and great leadership resources."
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="32dp"
+            android:textStyle="italic"
+            android:text="Where can I find out more information about the National Leadership Conference (NLC)?"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:text="In late February or early March, the national center publishes the NLC Conference Guide, which has many important pieces of information.  The guide and other information can be found on the national website, under the Conference tab."
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="32dp"
+            android:textStyle="italic"
+            android:text="Where can I find out more information about the National Fall Leadership Conferences (NFLC)?"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:text="In August or September, the national center publishes the NFLC Conference Guide, which has many important pieces of information.  The guide and other information can be found on the national website, under the Conference tab."
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
+
+</ScrollView>

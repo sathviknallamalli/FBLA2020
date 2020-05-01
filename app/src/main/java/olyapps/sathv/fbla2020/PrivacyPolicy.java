@@ -1,7 +1,9 @@
 package olyapps.sathv.fbla2020;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -16,6 +18,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 /**
  * Created by sathv on 6/1/2018.
@@ -29,6 +34,7 @@ public class PrivacyPolicy extends Fragment {
 
     WebView webView;
     View view;
+    FirebaseAuth mAuth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,7 +45,9 @@ public class PrivacyPolicy extends Fragment {
         getActivity().setTitle("Privacy Policy");
         setHasOptionsMenu(true);
 
-        String flow = "https://ohs-fbla.flycricket.io/privacy.html";
+        mAuth = FirebaseAuth.getInstance();
+
+        String flow = "https://myfbla-0.flycricket.io/privacy.html";
         webView = view.findViewById(R.id.pripol);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());
@@ -55,8 +63,28 @@ public class PrivacyPolicy extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if(item.getItemId() == R.id.logout){
+
+            SharedPreferences spchap = view.getContext().getSharedPreferences("chapterinfo", Context.MODE_PRIVATE);
+            final String chapid = spchap.getString("chapterID", "tempid");
+
+            SharedPreferences sp = view.getContext().getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+            final String role = sp.getString(getString(R.string.role), "role");
+            DatabaseReference dr;
+
+            if(role.equals("Adviser")){
+                dr = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid)
+                        .child("Advisers");
+            }else{
+                dr = FirebaseDatabase.getInstance().getReference().child("Chapters").child(chapid)
+                        .child("Users");
+            }
+
+            dr.child(mAuth.getCurrentUser().getUid()).child("online").setValue(ServerValue.TIMESTAMP);
+
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(getView().getContext(), LockScreen.class));
+            Intent i = new Intent(view.getContext(), LockScreen.class);
+            startActivity(i);
+           // finish();
         } if (item.getItemId() == R.id.item_userprofile) {
             Intent newintent = new Intent(view.getContext(), Profile.class);
             startActivity(newintent);
